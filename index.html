@@ -96,6 +96,12 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 .wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:800;margin-top:10px}
 .confete{font-size:34px;display:inline-block;animation:conf .8s ease}
 @keyframes conf{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1)}}
+.hero{position:relative;border-radius:18px;overflow:hidden;margin-bottom:16px;min-height:150px;display:flex;align-items:center;justify-content:center;background:#141414}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(1.1)}
+.hero .htxt{position:relative;z-index:2;text-align:center;padding:26px 18px;color:#fff;max-width:420px}
+.hero .htxt .hl{font-size:21px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.6);line-height:1.3}
+.hero .htxt .hs{font-size:14px;margin-top:6px;color:#ffc400;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.hero .hlogo{position:relative;z-index:2;width:64px;height:64px;border-radius:50%;background:#fff;padding:4px;margin:0 auto 10px;box-shadow:0 4px 16px rgba(0,0,0,.5);overflow:hidden}
 .gperfil{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #d4af37;border-radius:16px;padding:12px 14px;margin-bottom:14px}
 .gperfil img,.gperfil .fz{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#f3ead9;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
 .gperfil .gn{font-weight:800;font-size:16px;color:#141414}
@@ -121,6 +127,14 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 <main>
 <!-- ================= AGENDAR ================= -->
 <div id="pg-agendar">
+  <div class="hero" id="hero">
+    <img id="heroImg" alt="Carro sendo lavado">
+    <div style="position:relative;z-index:2;text-align:center;padding:22px 16px">
+      <div class="hlogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#d4af37" stroke-width="5"/><g fill="none" stroke="#d4af37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="#fff" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#d4af37" text-anchor="middle" letter-spacing="1.5">CAR WASH</text></svg></div>
+      <div class="hl">Seu carro limpo e protegido</div>
+      <div class="hs">Agende pelo celular — pronto em ~2h20</div>
+    </div>
+  </div>
   <div class="card">
     <h3>1. Escolha o serviço</h3>
     <div id="svcList"></div>
@@ -188,6 +202,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
     <div class="tabs2" id="gtabs">
       <button class="on" data-t="agenda">📋 Agenda</button>
       <button data-t="fin">💰 Financeiro</button>
+      <button data-t="valores">💵 Valores</button>
       <button data-t="cfg">⚙️ Configurações</button>
     </div>
 
@@ -237,6 +252,16 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
           <h3>⏳ Pagamentos pendentes</h3>
           <div id="pendList"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- VALORES -->
+    <div id="t-valores" class="hidden">
+      <div class="card">
+        <h3>💵 Valores das lavagens</h3>
+        <div class="hint" style="margin:0 0 12px">Altere nome, preço e duração — o cliente vê na hora. Salva sozinho.</div>
+        <div id="valoresSvc"></div>
+        <button class="btn s" onclick="addSvc();renderValores()">➕ Adicionar serviço</button>
       </div>
     </div>
 
@@ -309,7 +334,7 @@ const fone=()=>localStorage.getItem('lj_fone')||'';
 function seed(){
   return {
     cfg:{
-      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André',
+      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André', hero:'',
       abre:'08:00', fecha:'17:00', int:140, vagas:1,
       almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
@@ -323,13 +348,13 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined)DB.cfg.hero='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
 /* ============ NAV ============ */
 document.getElementById('nav').addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
+  const b=e.target.closest('button');if(!b||b.classList.contains('hidden'))return;
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));
   ['agendar','meus','gestor'].forEach(p=>{const pg=document.getElementById('pg-'+p);const was=pg.classList.contains('hidden');pg.classList.toggle('hidden',p!==b.dataset.pg);if(was&&p===b.dataset.pg){pg.classList.remove('pager');void pg.offsetWidth;pg.classList.add('pager');}});
   if(b.dataset.pg==='meus'){document.getElementById('meuFone').value=meuFone||fone();if(meuFone||fone())meusBuscar();}
@@ -340,6 +365,8 @@ document.getElementById('nav').addEventListener('click',e=>{
 /* ============ AGENDAR ============ */
 function renderSvcs(){
   document.getElementById('hNome').textContent=DB.cfg.nome;
+  const hi=document.getElementById('heroImg');
+  if(hi&&!hi.getAttribute('src'))hi.src=DB.cfg.hero||'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141414"/><stop offset=".55" stop-color="#3a2a18"/><stop offset="1" stop-color="#6d4c2f"/></linearGradient></defs><rect width="800" height="450" fill="url(#g)"/><g fill="none" stroke="#ffc400" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".85"><path d="M210 250 q35-52 105-52 t105 52 l28 32 h-266 z"/><path d="M245 215 q28-30 70-30 t70 30" stroke-width="5"/><circle cx="268" cy="285" r="20"/><circle cx="362" cy="285" r="20"/></g><g fill="#fff" opacity=".7"><circle cx="150" cy="140" r="11"/><circle cx="185" cy="115" r="7"/><circle cx="128" cy="110" r="5"/><circle cx="640" cy="130" r="10"/><circle cx="672" cy="105" r="6"/></g><text x="400" y="390" font-family="Arial" font-size="26" font-weight="800" fill="#ffc400" text-anchor="middle" opacity=".9">A.F CAR WASH</text></svg>');
   const ld=document.getElementById('hLogo');if(ld&&DB.cfg.logo&&!ld.dataset.custom){ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';}
   document.title=DB.cfg.nome+' — Agendamento';
   document.getElementById('svcList').innerHTML=DB.svc.map(s=>`
@@ -530,8 +557,9 @@ function cancelar(cd){
 document.getElementById('gtabs').addEventListener('click',e=>{
   const b=e.target.closest('button[data-t]');if(!b)return;
   document.querySelectorAll('#gtabs button').forEach(x=>x.classList.toggle('on',x===b));
-  ['agenda','fin','cfg'].forEach(t=>document.getElementById('t-'+t).classList.toggle('hidden',t!==b.dataset.t));
+  ['agenda','fin','cfg','valores'].forEach(t=>document.getElementById('t-'+t).classList.toggle('hidden',t!==b.dataset.t));
   if(b.dataset.t==='fin')renderFin();
+  if(b.dataset.t==='valores')renderValores();
 });
 document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 function login(){
@@ -539,13 +567,13 @@ function login(){
     gestor=true;sessionStorage.setItem('lj_gestor','1');
     document.getElementById('gestorLock').classList.add('hidden');
     document.getElementById('gestorPanel').classList.remove('hidden');
-    renderGestor();toast('Bem-vindo, '+esc(DB.cfg.gestorNome||'André')+'!');
+    renderGestor();toast('Bem-vindo, '+(DB.cfg.gestorNome||'André')+'! 🔐');
   }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
   document.getElementById('gData').value=sel.data||hoje();
   const gp=document.getElementById('gPerfil');
-  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div><div class="gn">'+esc(DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div>';
+  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div style="flex:1"><div class="gn">'+esc(DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div><button class="btn s" style="width:auto;padding:8px 14px;font-size:12.5px" onclick="sairGestor()">Sair</button>';
   renderAgenda();renderAtivos();renderFin();loadCfgForm();
 }
 /* --- agenda --- */
@@ -699,8 +727,8 @@ function loadCfgForm(){
   document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
   renderCfgSvc();
 }
-function renderCfgSvc(){
-  document.getElementById('cfgSvc').innerHTML=DB.svc.map((s,i)=>`
+function renderCfgSvc(t){
+  document.getElementById(t||'cfgSvc').innerHTML=DB.svc.map((s,i)=>`
     <div style="background:#faf6ef;border:1px solid #e6dccc;border-radius:14px;padding:14px;margin-bottom:12px">
       <label>Serviço ${i+1}</label>
       <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
@@ -715,12 +743,13 @@ function renderCfgSvc(){
 }
 function addSvc(){
   DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:140});
-  save();renderCfgSvc();toast('Serviço adicionado — edite nome, preço e duração');
+  save();renderCfgSvc();renderValores();toast('Serviço adicionado — edite nome, preço e duração');
 }
+function renderValores(){renderCfgSvc('valoresSvc');}
 function delSvc(i){
   if(DB.svc.length<=1)return toast('Precisa ter pelo menos 1 serviço',1);
   if(!confirm('Excluir este serviço?'))return;
-  DB.svc.splice(i,1);save();renderCfgSvc();renderSvcs();
+  DB.svc.splice(i,1);save();renderCfgSvc();renderValores();renderSvcs();
 }
 function tglDia(i){
   const f=DB.cfg.fechados||[];
@@ -769,20 +798,59 @@ function addCfgInputs(){
     <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
     <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
     <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
-    <div class="hint">Sem logo/foto enviados, o app usa o símbolo A.F embutido.</div></div>`;
+    <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
+    <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
+    <div class="hint">Sem envios, o app usa o símbolo A.F e o fundo padrão embutido.</div></div>`;
   box.parentNode.insertBefore(div.firstChild,box);
 }
 document.addEventListener('change',e=>{
   const f=e.target;
-  if((f.id==='cLogo'||f.id==='cRosto')&&f.files[0]){
+  if((f.id==='cLogo'||f.id==='cRosto'||f.id==='cHero')&&f.files[0]){
     const r=new FileReader();
     r.onload=()=>{
       if(f.id==='cLogo'){DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');}
-      else{DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+      else if(f.id==='cRosto'){DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+      else{DB.cfg.hero=r.result;save();const hi=document.getElementById('heroImg');hi.src=r.result;toast('Fundo atualizado ✅');}
     };
     r.readAsDataURL(f.files[0]);
   }
 });
+/* ============ ACESSO GESTOR (5 toques no logo) ============ */
+let taps=0,tapTimer=null;
+document.getElementById('hLogo').addEventListener('click',()=>{
+  if(gestor){document.querySelector('#nav [data-pg=gestor]').click();return;}
+  taps++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>taps=0,2500);
+  if(taps===3)toast('🔐 Área do gestor: toque mais 2x');
+  if(taps>=5){taps=0;abrirLoginGestor();}
+});
+function abrirLoginGestor(){
+  document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)fecharModalGestor()">
+    <div class="box" style="text-align:center">
+      <div style="font-size:40px">🔐</div>
+      <h3 style="justify-content:center;margin:8px 0">Acesso do Gestor</h3>
+      <div class="hint" style="margin-bottom:12px">Área exclusiva do André — agenda, financeiro e valores.</div>
+      <input type="password" id="pinModal" placeholder="PIN de acesso" inputmode="numeric" style="text-align:center;font-size:20px;letter-spacing:8px" maxlength="6">
+      <button class="btn p" style="margin-top:12px" onclick="loginModal()">Entrar</button>
+      <button class="btn s" style="margin-top:8px" onclick="fecharModalGestor()">Cancelar</button>
+      <div class="hint" id="pinModalHint"></div>
+    </div></div>`;
+  setTimeout(()=>document.getElementById('pinModal').focus(),100);
+}
+function loginModal(){
+  const v=document.getElementById('pinModal').value;
+  if(v===DB.cfg.pin){fecharModalGestor();document.getElementById('pin').value=v;login();document.querySelector('#nav [data-pg=gestor]').click();}
+  else{document.getElementById('pinModalHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
+}
+function fecharModalGestor(){document.getElementById('modalRoot').innerHTML='';}
+function sairGestor(){
+  gestor=false;sessionStorage.removeItem('lj_gestor');
+  document.getElementById('gestorPanel').classList.add('hidden');
+  document.getElementById('gestorLock').classList.remove('hidden');
+  document.getElementById('navGestor').classList.add('hidden');
+  document.getElementById('pin').value='';
+  document.querySelector('#nav [data-pg=agendar]').click();
+  toast('Modo cliente 👋');
+}
 /* ============ TICKER ============ */
 setInterval(()=>{
   if(!DB||document.hidden)return;
@@ -809,7 +877,7 @@ load();
 addCfgInputs();
 renderSvcs();renderPay();renderDays();renderSlots();resumo();
 sel.data=hoje();
-if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
+if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
 </script>
 </body>
 </html>
