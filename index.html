@@ -128,11 +128,11 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 <!-- ================= AGENDAR ================= -->
 <div id="pg-agendar">
   <div class="hero" id="hero">
-    <img id="heroImg" alt="Carro sendo lavado" src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg">
+    <img id="heroImg" alt="Carro sendo lavado" src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,'+encodeURIComponent(document.getElementById('heroFallback').innerHTML)">
     <div style="position:relative;z-index:2;text-align:center;padding:22px 16px">
       <div class="hlogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#d4af37" stroke-width="5"/><g fill="none" stroke="#d4af37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="#fff" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#d4af37" text-anchor="middle" letter-spacing="1.5">CAR WASH</text></svg></div>
-      <div class="hl">Seu carro impecável, sem fila de espera</div>
-      <div class="hs">📅 Agende pelo celular — pronto em ~2h20</div>
+      <div class="hl">Seu carro limpo e protegido</div>
+      <div class="hs">Agende pelo celular — pronto em ~2h20</div>
     </div>
   </div>
   <div class="card">
@@ -261,7 +261,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
         <h3>💵 Valores das lavagens</h3>
         <div class="hint" style="margin:0 0 12px">Altere nome, preço e duração — o cliente vê na hora. Salva sozinho.</div>
         <div id="valoresSvc"></div>
-        <button class="btn s" onclick="addSvc()">➕ Adicionar serviço</button>
+        <button class="btn s" onclick="addSvc();renderValores()">➕ Adicionar serviço</button>
       </div>
     </div>
 
@@ -282,7 +282,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
         <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
         <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
         <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
-        <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div>
+        <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão embutida.</div>
       </div>
       <div class="card">
         <h3>🕐 Funcionamento</h3>
@@ -328,6 +328,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 </div>
 </main>
 
+<div id="heroFallback" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="800" height="450"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141414"/><stop offset=".55" stop-color="#3a2a18"/><stop offset="1" stop-color="#6d4c2f"/></linearGradient></defs><rect width="800" height="450" fill="url(#g)"/><g fill="none" stroke="#ffc400" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".85"><path d="M210 250 q35-52 105-52 t105 52 l28 32 h-266 z"/><path d="M245 215 q28-30 70-30 t70 30" stroke-width="5"/><circle cx="268" cy="285" r="20"/><circle cx="362" cy="285" r="20"/></g><text x="400" y="390" font-family="Arial" font-size="26" font-weight="800" fill="#ffc400" text-anchor="middle">A.F CAR WASH</text></svg></div>
 <div id="modalRoot"></div>
 
 <script>
@@ -546,7 +547,7 @@ function renderMeus(list){
       extra=`<div class="prog"><div class="fill" style="width:${Math.max(6,pct)}%">${pct}%</div></div><div class="pct">🧽 Em lavagem — ${restTxt}</div>`;
     }
     if(o.status==='pronto')extra=`<div class="pct" style="color:#2e7d32">✨ PRONTO! Pode buscar o carro.</div>`;
-    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
+    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra+=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
     if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#faf6ef;border:2px dashed #ddd2c0;border-radius:12px;padding:12px;font-size:14px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
     const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
     return `<div class="os">
@@ -744,10 +745,11 @@ function loadCfgForm(){
   if(cG)cG.value=c.gestorNome||'André';
   const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
-  renderCfgSvc();
+  renderCfgSvc('cfgSvc');
 }
 function renderCfgSvc(t){
-  document.getElementById(t||'cfgSvc').innerHTML=DB.svc.map((s,i)=>`
+  if(!t)t='cfgSvc';
+  document.getElementById(t).innerHTML=DB.svc.map((s,i)=>`
     <div style="background:#faf6ef;border:1px solid #e6dccc;border-radius:14px;padding:14px;margin-bottom:12px">
       <label>Serviço ${i+1}</label>
       <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
@@ -762,13 +764,13 @@ function renderCfgSvc(t){
 }
 function addSvc(){
   DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:140});
-  save();renderCfgSvc();renderValores();toast('Serviço adicionado — edite nome, preço e duração');
+  save();renderCfgSvc('cfgSvc');renderValores();toast('Serviço adicionado — edite nome, preço e duração');
 }
 function renderValores(){renderCfgSvc('valoresSvc');}
 function delSvc(i){
   if(DB.svc.length<=1)return toast('Precisa ter pelo menos 1 serviço',1);
   if(!confirm('Excluir este serviço?'))return;
-  DB.svc.splice(i,1);save();renderCfgSvc();renderValores();renderSvcs();
+  DB.svc.splice(i,1);save();renderCfgSvc('cfgSvc');renderValores();renderSvcs();
 }
 function tglDia(i){
   const f=DB.cfg.fechados||[];
@@ -805,22 +807,6 @@ function restore(inp){
   const r=new FileReader();
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cfg)throw 0;DB=d;save();toast('Backup restaurado');location.reload();}catch(e){toast('Arquivo inválido',1);}};
   r.readAsText(f);
-}
-/* --- inputs cfg extras --- */
-function addCfgInputs(){
-  const box=document.querySelector('#t-cfg .card');
-  const div=document.createElement('div');
-  div.innerHTML=`<div class="card"><h3>🏪 Nome, logo e gestor</h3>
-    <label>Nome da empresa</label><input id="cNome">
-    <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
-    <label style="margin-top:8px">Logo (foto — opcional)</label>
-    <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
-    <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
-    <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
-    <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
-    <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
-    <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div></div>`;
-  box.parentNode.insertBefore(div.firstChild,box);
 }
 document.addEventListener('change',e=>{
   const f=e.target;
@@ -896,7 +882,6 @@ setInterval(()=>{
 
 /* ============ INIT ============ */
 load();
-addCfgInputs();
 renderSvcs();renderPay();renderDays();renderSlots();resumo();
 sel.data=hoje();
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
