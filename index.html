@@ -449,6 +449,14 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
         <button class="btn s" style="margin-top:8px" onclick="document.getElementById('impFile').click()">⬆️ Restaurar backup</button>
         <input type="file" id="impFile" accept=".json" class="hidden" onchange="restore(this)">
       </div>
+      <div class="card">
+        <h3>☁️ Nuvem & notificações</h3>
+        <div class="hint" style="margin-top:0">Agendamentos feitos pelos clientes <b>aparecem aqui sozinhos</b> — sincroniza pela nuvem a cada 30s. <span id="cloudStat">—</span></div>
+        <label style="margin-top:10px">Código da loja na nuvem</label>
+        <input id="cTopico">
+        <button class="btn p" style="margin-top:10px" onclick="ativarNotif()">🔔 Ativar notificações neste navegador</button>
+        <div class="hint"><b>📲 Notificação no celular (app fechado):</b> instale o app gratuito <b>ntfy</b> (Play Store), toque em <b>＋ → Inscrever-se no tópico</b> e digite o Código da loja acima. Cada agendamento novo chega na hora, com som.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -471,6 +479,58 @@ const esc=s=>String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&am
 const fone=()=>localStorage.getItem('lj_fone')||'';
 const chkPin=v=>{const i=(DB.cfg.pins||[]).indexOf(v);return i<0?null:((DB.cfg.nomes||{})[v]||'Gestor')};
 
+/* ============ NUVEM (ntfy.sh) ============ */
+const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-m8t3v7r2';
+let noPub=false,pubTimer=null;
+const topDB=()=>(DB.cfg.topico||TOP_PADRAO)+'-db';
+const topNot=()=>(DB.cfg.topico||TOP_PADRAO);
+function agendarPub(){if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
+async function pubDB(){
+  try{
+    const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}};
+    DB.cloudT=blob.t;noPub=true;save();noPub=false;
+    await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
+  }catch(e){}
+}
+async function pullDB(){
+  try{
+    const r=await fetch(NTFY+'/'+topDB()+'/json?poll=1&since=12h',{cache:'no-store'});
+    if(!r.ok)return;
+    const txt=await r.text();let best=null;
+    for(const line of txt.split('\n')){
+      if(!line.trim())continue;let ev;try{ev=JSON.parse(line)}catch(e){continue}
+      if(!ev||ev.title!=='db')continue;let b=null;
+      if(ev.message){try{b=JSON.parse(ev.message)}catch(e){}}
+      if((!b||!b.t)&&ev.attachment&&ev.attachment.url){try{b=await(await fetch(ev.attachment.url)).json()}catch(e){}}
+      if(b&&b.t&&(!best||b.t>best.t))best=b;
+    }
+    if(best)mergeBlob(best);
+  }catch(e){}
+}
+function mergeBlob(b){
+  if(!b||b.t<=(DB.cloudT||0))return;
+  noPub=true;
+  try{
+    const un=(arr,key)=>{const m={};(DB[key]||[]).forEach(x=>m[x.id]=x);(arr||[]).forEach(x=>{const c=m[x.id];if(!c||(x.criado||x.id||0)>(c.criado||c.id||0))m[x.id]=x});DB[key]=Object.values(m)};
+    un(b.orders,'orders');un(b.pay,'pay');un(b.desp,'desp');
+    DB.seq=Math.max(DB.seq||1,b.seq||1);
+    const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
+    Object.assign(DB.cfg,b.cfg||{},keep);
+    DB.cloudT=b.t;DB.cloudAt=Date.now();save();
+    if(gestor){renderGestor();toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
+  }finally{noPub=false}
+}
+function notifyNovo(o){
+  const msg=o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)+' ('+o.pag+') | Cliente: '+o.nome+' · 📞 '+o.fone;
+  fetch(NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 '+o.cd+' — '+o.nome)+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car').catch(()=>{});
+  if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:msg})}catch(e){}}
+}
+function ativarNotif(){
+  if(!('Notification'in window))return toast('Navegador sem suporte a notificações',1);
+  Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas 🔔':'Permissão negada no navegador',p==='granted'?0:1));
+}
+function cloudStat(){const el=document.getElementById('cloudStat');if(el)el.textContent=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';}
+
 function seed(){
   return {
     cfg:{
@@ -491,14 +551,14 @@ function seed(){
   };
 }
 function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined||!DB.cfg.hero)DB.cfg.hero=HERO_PADRAO;if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';if(!DB.cfg.pins){const p0=DB.cfg.pin||'1234';DB.cfg.pins=[p0,'4321'];DB.cfg.nomes={};DB.cfg.nomes[p0]=DB.cfg.gestorNome||'André';DB.cfg.nomes['4321']='Lysa';delete DB.cfg.pin;}if(DB.cfg.meta===undefined)DB.cfg.meta=3000;save();}
-function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
+function save(){localStorage.setItem(LSK,JSON.stringify(DB));if(!noPub&&DB&&DB.cfg)agendarPub();}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
 /* ============ NAV ============ */
 function go(pg){
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.pg===pg));
   ['home','agendar','meus','gestor','valores'].forEach(p=>{const el=document.getElementById('pg-'+p);if(!el)return;const was=el.classList.contains('hidden');el.classList.toggle('hidden',p!==pg);if(was&&p===pg){el.classList.remove('pager');void el.offsetWidth;el.classList.add('pager');}});
-  if(pg==='meus'){document.getElementById('meuFone').value=meuFone||fone();if(meuFone||fone())meusBuscar();}
+  if(pg==='meus'){document.getElementById('meuFone').value=meuFone||fone();if(meuFone||fone())meusBuscar();pullDB();}
   if(pg==='gestor'&&gestor)renderGestor();
   if(pg==='home')liveHome();
   window.scrollTo(0,0);
@@ -628,9 +688,11 @@ function confirmar(){
   const q=DB.orders.filter(o=>o.data===sel.data&&o.hora===sel.hora&&!['cancelado'].includes(o.status)).length;
   if(q>=(+DB.cfg.vagas||1))return toast('Este horário acabou de encher — escolha outro',1);
   const cd='AG'+String(DB.seq++).padStart(4,'0');
-  DB.orders.push({id:Date.now(),cd,nome,fone:fo,modelo:mod||'—',placa,obs,svc:s.id,svcNome:s.nome,preco:s.preco,dur:s.dur,data:sel.data,hora:sel.hora,pag:sel.pag,status:'agendado',criado:Date.now(),timer:null,pago:false,pagoEm:null});
+  const novo={id:Date.now(),cd,nome,fone:fo,modelo:mod||'—',placa,obs,svc:s.id,svcNome:s.nome,preco:s.preco,dur:s.dur,data:sel.data,hora:sel.hora,pag:sel.pag,status:'agendado',criado:Date.now(),timer:null,pago:false,pagoEm:null};
+  DB.orders.push(novo);
   save();
   localStorage.setItem('lj_fone',fo);
+  notifyNovo(novo);
   sel={svc:null,data:null,hora:null,pag:null};
   document.getElementById('fNome').value='';document.getElementById('fModelo').value='';document.getElementById('fPlaca').value='';document.getElementById('fObs').value='';
   renderSvcs();renderDays();renderSlots();renderPay();resumo();
@@ -785,16 +847,16 @@ function login(){
     document.getElementById('pg-gestor').classList.remove('hidden');
     fecharModalGestor();
     window.scrollTo(0,0);
-    renderGestor();toast('Bem-vindo, '+who+'! 🔐');
+    renderGestor();pullDB();toast('Bem-vindo, '+who+'! 🔐');
   }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
   const novos=(DB.orders||[]).filter(o=>o.criado>(DB.lastSeen||0)&&o.status!=='cancelado').length;
-  DB.lastSeen=Date.now();save();
+  noPub=true;DB.lastSeen=Date.now();save();noPub=false;
   document.getElementById('gData').value=sel.data||hoje();
   const gp=document.getElementById('gPerfil');
-  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨\u200d💼</div>')+'<div style="flex:1"><div class="gn">'+esc(gestorAtual||DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+(novos?' · <span class="novos">🔔 '+novos+' agendamento(s) novo(s)!</span>':'')+'</div></div><button class="btn s" style="width:auto;padding:8px 14px;font-size:12.5px" onclick="sairGestor()">Sair</button>';
-  renderGeral();renderAgenda();renderAtivos();renderFin();loadCfgForm();
+  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨\u200d💼</div>')+'<div style="flex:1"><div class="gn">'+esc(gestorAtual||DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+(novos?' · <span class="novos">🔔 '+novos+' agendamento(s) novo(s)!</span>':'')+(DB.cloudAt?' · ☁️ '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'')+'</div></div><button class="btn s" style="width:auto;padding:8px 14px;font-size:12.5px" onclick="sairGestor()">Sair</button>';
+  renderGeral();renderAgenda();renderAtivos();renderFin();loadCfgForm();cloudStat();
 }
 /* --- visao geral --- */
 function renderGeral(){
@@ -1074,6 +1136,7 @@ function loadCfgForm(){
   document.getElementById('cInt').value=c.int;document.getElementById('cVagas').value=c.vagas;
   document.getElementById('cAlmI').value=c.almocoI;document.getElementById('cAlmF').value=c.almocoF;
   document.getElementById('cPix').value=c.pix;document.getElementById('cWapp').value=c.wapp;
+  const cT=document.getElementById('cTopico');if(cT)cT.value=DB.cfg.topico||TOP_PADRAO;
   document.getElementById('cPinA').value=(DB.cfg.pins||['1234'])[0];document.getElementById('cPinL').value=(DB.cfg.pins||['1234','4321'])[1]||'4321';
   const cN=document.getElementById('cNome'),cG=document.getElementById('cGestor');
   if(cN)cN.value=c.nome;
@@ -1122,6 +1185,7 @@ function saveCfg(){
   c.almocoF=document.getElementById('cAlmF').value||'';
   c.pix=document.getElementById('cPix').value;
   c.wapp=document.getElementById('cWapp').value.replace(/\D/g,'');
+  c.topico=(document.getElementById('cTopico').value||'').trim()||TOP_PADRAO;
   const cN2=document.getElementById('cNome'),cG2=document.getElementById('cGestor');
   c.nome=(cN2&&cN2.value)||c.nome;
   c.gestorNome=(cG2&&cG2.value)||c.gestorNome||'André';
@@ -1241,7 +1305,9 @@ renderSvcs();renderPay();renderDays();renderSlots();resumo();
 renderHomeSvc();liveHome();mostraVersao();
 sel.data=hoje();
 go('home');
+pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
+setInterval(()=>{if(gestor&&!document.hidden)pullDB()},30000);
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
 </script>
 </body>
