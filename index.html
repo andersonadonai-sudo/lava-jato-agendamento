@@ -1002,6 +1002,11 @@ function saveCfg(){
   c.gestorNome=(cG2&&cG2.value)||c.gestorNome||'André';
   save();renderSvcs();renderDays();renderSlots();renderGestor();toast('Configurações salvas ✅');
 }
+function trocaPin(){
+  const p=document.getElementById('cPin').value.trim();
+  if(p.length<4)return toast('PIN deve ter 4+ dígitos',1);
+  DB.cfg.pin=p;save();document.getElementById('cPin').value='';toast('PIN atualizado 🔐');
+}
 function backup(){
   const a=document.createElement('a');
   a.href='data:application/json,'+encodeURIComponent(JSON.stringify(DB));
