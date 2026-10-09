@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A.F Car Wash — Agendamento</title>
+<title>Lava Jato — Agendamento</title>
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -96,11 +96,12 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 .wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:800;margin-top:10px}
 .confete{font-size:34px;display:inline-block;animation:conf .8s ease}
 @keyframes conf{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1)}}
-.hero{position:relative;border-radius:18px;overflow:hidden;margin-bottom:16px;min-height:170px;display:flex;align-items:center;justify-content:center;background:#141414}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(1.1)}
-.hero .htxt{position:relative;z-index:2;text-align:center;padding:28px 18px;color:#fff;max-width:440px}
-.hero .htxt .hl{font-size:22px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.7);line-height:1.3}
-.hero .htxt .hs{font-size:14px;margin-top:7px;color:#ffc400;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+.hero{position:relative;border-radius:18px;overflow:hidden;margin-bottom:16px;min-height:150px;display:flex;align-items:center;justify-content:center;background:#141414}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(1.1)}
+.hero .htxt{position:relative;z-index:2;text-align:center;padding:26px 18px;color:#fff;max-width:420px}
+.hero .htxt .hl{font-size:21px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.6);line-height:1.3}
+.hero .htxt .hs{font-size:14px;margin-top:6px;color:#ffc400;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.hero .hlogo{position:relative;z-index:2;width:64px;height:64px;border-radius:50%;background:#fff;padding:4px;margin:0 auto 10px;box-shadow:0 4px 16px rgba(0,0,0,.5);overflow:hidden}
 .gperfil{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #d4af37;border-radius:16px;padding:12px 14px;margin-bottom:14px}
 .gperfil img,.gperfil .fz{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#f3ead9;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
 .gperfil .gn{font-weight:800;font-size:16px;color:#141414}
@@ -112,7 +113,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 <header>
   <div class="logo" id="hLogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><defs><linearGradient id="lgAF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0f0f0"/><stop offset=".5" stop-color="#c9c9c9"/><stop offset="1" stop-color="#d4af37"/></linearGradient></defs><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#d4af37" stroke-width="5"/><g fill="none" stroke="#d4af37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><g fill="#fff" opacity=".9"><circle cx="20" cy="28" r="3" opacity=".5"/><circle cx="26" cy="22" r="2" opacity=".7"/><circle cx="17" cy="21" r="1.4" opacity=".6"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="url(#lgAF)" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#e8e8e8" text-anchor="middle" letter-spacing="1.5">CAR WASH</text><text x="50" y="86" font-family="Georgia,serif" font-size="5.2" font-style="italic" fill="#f5c518" text-anchor="middle">&quot;O Cuidado que faz Diferen&#231;a&quot;</text></svg></div>
   <div>
-    <h1 id="hNome">A.F Car Wash</h1>
+    <h1 id="hNome">Lava Jato</h1>
     <div class="sub" id="hSub">Agende sua lavagem pelo celular</div>
   </div>
 </header>
@@ -127,8 +128,9 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 <!-- ================= AGENDAR ================= -->
 <div id="pg-agendar">
   <div class="hero" id="hero">
-    <img id="heroImg" alt="Carro sendo lavado">
-    <div class="htxt">
+    <img id="heroImg" alt="Carro sendo lavado" src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg">
+    <div style="position:relative;z-index:2;text-align:center;padding:22px 16px">
+      <div class="hlogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#d4af37" stroke-width="5"/><g fill="none" stroke="#d4af37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="#fff" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#d4af37" text-anchor="middle" letter-spacing="1.5">CAR WASH</text></svg></div>
       <div class="hl">Seu carro impecável, sem fila de espera</div>
       <div class="hs">📅 Agende pelo celular — pronto em ~2h20</div>
     </div>
@@ -266,7 +268,24 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
     <!-- CONFIG -->
     <div id="t-cfg" class="hidden">
       <div class="card">
-        <h3>⚙️ Funcionamento</h3>
+        <h3>⚙️ Serviços e preços</h3>
+        <div id="cfgSvc"></div>
+        <button class="btn s" onclick="addSvc()">➕ Novo serviço</button>
+      </div>
+      <div class="card">
+        <h3>🏪 Nome, logo e gestor</h3>
+        <label>Nome da empresa</label><input id="cNome">
+        <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
+        <label style="margin-top:8px">Logo (foto — opcional)</label>
+        <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
+        <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
+        <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
+        <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
+        <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
+        <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div>
+      </div>
+      <div class="card">
+        <h3>🕐 Funcionamento</h3>
         <div class="row">
           <div><label>Abre</label><input type="time" id="cAbre"></div>
           <div><label>Fecha</label><input type="time" id="cFecha"></div>
@@ -316,6 +335,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 const LSK='lava_jato_v1';
 let DB=null, gestor=false, sel={svc:null,data:null,hora:null,pag:null}, meuFone='';
 const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const HERO_PADRAO='https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg';
 const hoje=()=>new Date().toISOString().slice(0,10);
 const agoraMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
@@ -323,12 +343,11 @@ const fmtBR=d=>{if(!d)return'';const[a,b,c]=d.split('-');return c+'/'+b};
 const brl=v=>(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 const fone=()=>localStorage.getItem('lj_fone')||'';
-const HERO_PADRAO='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141414"/><stop offset=".55" stop-color="#3a2a18"/><stop offset="1" stop-color="#6d4c2f"/></linearGradient></defs><rect width="800" height="360" fill="url(#bg)"/><g fill="none" stroke="#ffc400" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".9"><path d="M230 235 q38-58 115-58 t115 58 l30 35 h-290 z"/><path d="M268 196 q30-33 77-33 t77 33" stroke-width="5.5"/><circle cx="290" cy="272" r="22" stroke-width="7"/><circle cx="400" cy="272" r="22" stroke-width="7"/></g><g fill="#fff"><circle cx="150" cy="120" r="13" opacity=".75"/><circle cx="188" cy="92" r="8" opacity=".6"/><circle cx="128" cy="88" r="5.5" opacity=".5"/><circle cx="640" cy="110" r="11" opacity=".7"/><circle cx="676" cy="84" r="7" opacity=".55"/><circle cx="612" cy="72" r="4.5" opacity=".45"/><circle cx="540" cy="150" r="6" opacity=".4"/></g><g stroke="#9fd8ef" stroke-width="4" stroke-linecap="round" opacity=".8"><path d="M120 190 q-20 30 5 55" fill="none"/><path d="M690 170 q25 25 3 52" fill="none"/></g><text x="400" y="330" font-family="Arial" font-size="24" font-weight="800" fill="#ffc400" text-anchor="middle" opacity=".95">A.F CAR WASH</text></svg>');
 
 function seed(){
   return {
     cfg:{
-      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André', hero:'',
+      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André', hero:HERO_PADRAO,
       abre:'08:00', fecha:'17:00', int:140, vagas:1,
       almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
@@ -342,7 +361,7 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(!DB.cfg.logo)DB.cfg.logo='';if(!DB.cfg.rosto)DB.cfg.rosto='';if(!DB.cfg.hero)DB.cfg.hero='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined||!DB.cfg.hero)DB.cfg.hero=HERO_PADRAO;if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -360,7 +379,7 @@ document.getElementById('nav').addEventListener('click',e=>{
 function renderSvcs(){
   document.getElementById('hNome').textContent=DB.cfg.nome;
   const hi=document.getElementById('heroImg');
-  if(hi)hi.src=DB.cfg.hero||HERO_PADRAO;
+  if(hi&&!hi.getAttribute('src'))hi.src=DB.cfg.hero||HERO_PADRAO;
   const ld=document.getElementById('hLogo');if(ld&&DB.cfg.logo&&!ld.dataset.custom){ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';}
   document.title=DB.cfg.nome+' — Agendamento';
   document.getElementById('svcList').innerHTML=DB.svc.map(s=>`
@@ -482,8 +501,9 @@ function confirmar(){
   sel={svc:null,data:null,hora:null,pag:null};
   document.getElementById('fNome').value='';document.getElementById('fModelo').value='';document.getElementById('fPlaca').value='';document.getElementById('fObs').value='';
   renderSvcs();renderDays();renderSlots();renderPay();resumo();
-  modalConfirm(cd,nome,s,DB.orders[DB.orders.length-1]);
+  modalConfirm(cd,nome,s,sel0());
 }
+function sel0(){return DB.orders[DB.orders.length-1];}
 
 function modalConfirm(cd,nome,s,o){
   const wa=DB.cfg.wapp?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Agendei uma lavagem ('+cd+') — '+s.nome+' em '+fmtBR(o.data)+' às '+o.hora+'. Nome: '+nome)}">💬 Avisar no WhatsApp</a>`:'';
@@ -526,7 +546,7 @@ function renderMeus(list){
       extra=`<div class="prog"><div class="fill" style="width:${Math.max(6,pct)}%">${pct}%</div></div><div class="pct">🧽 Em lavagem — ${restTxt}</div>`;
     }
     if(o.status==='pronto')extra=`<div class="pct" style="color:#2e7d32">✨ PRONTO! Pode buscar o carro.</div>`;
-    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra+=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
+    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
     if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#faf6ef;border:2px dashed #ddd2c0;border-radius:12px;padding:12px;font-size:14px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
     const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
     return `<div class="os">
@@ -712,21 +732,6 @@ function addDesp(){
   renderFin();toast('Despesa lançada');
 }
 function delDesp(id){DB.desp=DB.desp.filter(d=>d.id!==id);save();renderFin();toast('Despesa removida');}
-/* --- valores (aba do cliente editavel pelo gestor) --- */
-function renderValores(){
-  const t=document.getElementById('valoresSvc');
-  if(t)t.innerHTML=DB.svc.map((s,i)=>`
-    <div style="background:#faf6ef;border:1px solid #e6dccc;border-radius:14px;padding:14px;margin-bottom:12px">
-      <label>Serviço ${i+1}</label>
-      <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
-      <label style="margin-top:8px">Descrição</label>
-      <textarea rows="2" onchange="DB.svc[${i}].desc=this.value;save();renderSvcs()">${esc(s.desc)}</textarea>
-      <div class="row" style="margin-top:8px">
-        <div><label>Preço R$</label><input type="number" step="0.01" value="${s.preco}" onchange="DB.svc[${i}].preco=+this.value;save();renderSvcs()"></div>
-        <div><label>Duração (min)</label><input type="number" step="10" value="${s.dur}" onchange="DB.svc[${i}].dur=+this.value;save();renderSvcs()"></div>
-      </div>
-    </div>`).join('');
-}
 /* --- config --- */
 function loadCfgForm(){
   const c=DB.cfg;
@@ -739,10 +744,10 @@ function loadCfgForm(){
   if(cG)cG.value=c.gestorNome||'André';
   const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
-  const cs=document.getElementById('cfgSvc');if(cs)renderCfgSvc();
+  renderCfgSvc();
 }
-function renderCfgSvc(){
-  document.getElementById('cfgSvc').innerHTML=DB.svc.map((s,i)=>`
+function renderCfgSvc(t){
+  document.getElementById(t||'cfgSvc').innerHTML=DB.svc.map((s,i)=>`
     <div style="background:#faf6ef;border:1px solid #e6dccc;border-radius:14px;padding:14px;margin-bottom:12px">
       <label>Serviço ${i+1}</label>
       <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
@@ -759,6 +764,7 @@ function addSvc(){
   DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:140});
   save();renderCfgSvc();renderValores();toast('Serviço adicionado — edite nome, preço e duração');
 }
+function renderValores(){renderCfgSvc('valoresSvc');}
 function delSvc(i){
   if(DB.svc.length<=1)return toast('Precisa ter pelo menos 1 serviço',1);
   if(!confirm('Excluir este serviço?'))return;
@@ -800,20 +806,20 @@ function restore(inp){
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cfg)throw 0;DB=d;save();toast('Backup restaurado');location.reload();}catch(e){toast('Arquivo inválido',1);}};
   r.readAsText(f);
 }
-/* --- inputs cfg extras (nome/logo/gestor/fundo) --- */
+/* --- inputs cfg extras --- */
 function addCfgInputs(){
   const box=document.querySelector('#t-cfg .card');
   const div=document.createElement('div');
   div.innerHTML=`<div class="card"><h3>🏪 Nome, logo e gestor</h3>
     <label>Nome da empresa</label><input id="cNome">
     <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
-    <label style="margin-top:8px">Logo real (foto do logo)</label>
+    <label style="margin-top:8px">Logo (foto — opcional)</label>
     <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
     <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
     <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
-    <label style="margin-top:8px">Fundo do topo (foto de carro lavando)</label>
+    <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
     <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
-    <div class="hint">Sem envios, o app usa o símbolo A.F e a arte padrão embutidos.</div></div>`;
+    <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div></div>`;
   box.parentNode.insertBefore(div.firstChild,box);
 }
 document.addEventListener('change',e=>{
@@ -823,7 +829,7 @@ document.addEventListener('change',e=>{
     r.onload=()=>{
       if(f.id==='cLogo'){DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');}
       else if(f.id==='cRosto'){DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
-      else{DB.cfg.hero=r.result;save();const hi=document.getElementById('heroImg');if(hi)hi.src=r.result;toast('Fundo do topo atualizado ✅');}
+      else{DB.cfg.hero=r.result;save();const hi=document.getElementById('heroImg');hi.src=r.result;toast('Fundo atualizado ✅');}
     };
     r.readAsDataURL(f.files[0]);
   }
@@ -858,6 +864,7 @@ function fecharModalGestor(){document.getElementById('modalRoot').innerHTML='';}
 function sairGestor(){
   gestor=false;sessionStorage.removeItem('lj_gestor');
   document.getElementById('gestorPanel').classList.add('hidden');
+  document.getElementById('gestorLock').classList.remove('hidden');
   document.getElementById('navGestor').classList.add('hidden');
   document.getElementById('pin').value='';
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.pg==='agendar'));
