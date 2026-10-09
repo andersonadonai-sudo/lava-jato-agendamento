@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lava Jato — Agendamento</title>
+<meta name="theme-color" content="#141414">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f6f2ec;color:#3e2f23;font-size:16px;min-height:100vh;padding-bottom:100px}
-header{background:linear-gradient(135deg,#4a3423,#6d4c2f);padding:20px 16px 16px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;box-shadow:0 3px 14px rgba(62,47,35,.35)}
+header{background:linear-gradient(135deg,#141414,#2b2b2b);border-bottom:3px solid #d4af37;padding:20px 16px 16px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;box-shadow:0 3px 14px rgba(62,47,35,.35)}
 header .logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden}
 header h1{font-size:20px;font-weight:800;letter-spacing:.3px;color:#fff}
-header .sub{font-size:13px;opacity:.9;margin-top:3px;color:#f0e6d8}
+header .sub{font-size:13px;opacity:.9;margin-top:3px;color:#d4af37}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #e2d8c8;z-index:60;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(62,47,35,.08)}
 nav button{flex:1;background:none;border:none;color:#a08f7c;padding:11px 4px 13px;font-size:12.5px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
 nav button span.ic{font-size:23px}
@@ -51,18 +54,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#6d4c2f}
 .slot.sel{background:#f3ead9;border-color:#6d4c2f;box-shadow:0 0 0 3px rgba(109,76,47,.15)}
 .btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
 .btn:active{transform:scale(.98)}
-.btn.p{background:#6d4c2f;color:#fff}
+.btn.p{background:#ffc400;color:#141414;box-shadow:0 3px 12px rgba(255,196,0,.35)}
 .btn.g{background:#2e7d32;color:#fff}
 .btn.d{background:#b3402e;color:#fff}
-.btn.s{background:#efe7da;color:#5a4632}
-.btn:disabled{opacity:.4;pointer-events:none}
-.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
-.pay button{background:#faf6ef;border:2px solid #e6dccc;border-radius:12px;padding:14px 4px;color:#5a4632;font-size:14px;font-weight:800;cursor:pointer}
-.pay button.sel{border-color:#6d4c2f;background:#f3ead9;color:#3e2f23}
-.tabs2{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
-.tabs2 button{background:#efe7da;border:2px solid #e6dccc;border-radius:22px;padding:9px 16px;color:#7a6a58;font-size:14px;font-weight:800;white-space:nowrap;cursor:pointer}
-.tabs2 button.on{background:#6d4c2f;border-color:#6d4c2f;color:#fff}
-.os{background:#fff;border:1px solid #e6dccc;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(62,47,35,.05)}
+.btn.s{background:#fff;color:#141414;border:2px solid #141414}
+.btn.bl{background:#1565c0;color:#fff}
+.pager{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.os{background:#fff;border:1px solid #e6dccc;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(62,47,35,.05);content-visibility:auto;contain-intrinsic-size:90px}
 .os .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .os .cd{font-size:12.5px;color:#9c8b78;font-weight:800}
 .os .cl{font-weight:800;font-size:16.5px;margin-top:3px;color:#3e2f23}
@@ -95,6 +94,12 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 .direita,td.r{text-align:right}
 .hint{font-size:13px;color:#8a7a66;line-height:1.55;margin-top:9px}
 .wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:800;margin-top:10px}
+.confete{font-size:34px;display:inline-block;animation:conf .8s ease}
+@keyframes conf{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1)}}
+.gperfil{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #d4af37;border-radius:16px;padding:12px 14px;margin-bottom:14px}
+.gperfil img,.gperfil .fz{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#f3ead9;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.gperfil .gn{font-weight:800;font-size:16px;color:#141414}
+.gperfil .gr{font-size:12.5px;color:#9c8b78;font-weight:700}
 </style>
 </head>
 <body>
@@ -179,6 +184,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
     </div>
   </div>
   <div id="gestorPanel" class="hidden">
+    <div class="gperfil" id="gPerfil"></div>
     <div class="tabs2" id="gtabs">
       <button class="on" data-t="agenda">📋 Agenda</button>
       <button data-t="fin">💰 Financeiro</button>
@@ -303,7 +309,7 @@ const fone=()=>localStorage.getItem('lj_fone')||'';
 function seed(){
   return {
     cfg:{
-      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'',
+      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André',
       abre:'08:00', fecha:'17:00', int:140, vagas:1,
       almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
@@ -317,7 +323,7 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';save();}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -325,7 +331,7 @@ function toast(m,e){const t=document.createElement('div');t.className='toast'+(e
 document.getElementById('nav').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));
-  ['agendar','meus','gestor'].forEach(p=>document.getElementById('pg-'+p).classList.toggle('hidden',p!==b.dataset.pg));
+  ['agendar','meus','gestor'].forEach(p=>{const pg=document.getElementById('pg-'+p);const was=pg.classList.contains('hidden');pg.classList.toggle('hidden',p!==b.dataset.pg);if(was&&p===b.dataset.pg){pg.classList.remove('pager');void pg.offsetWidth;pg.classList.add('pager');}});
   if(b.dataset.pg==='meus'){document.getElementById('meuFone').value=meuFone||fone();if(meuFone||fone())meusBuscar();}
   if(b.dataset.pg==='gestor'&&gestor)renderGestor();
   window.scrollTo(0,0);
@@ -463,7 +469,7 @@ function modalConfirm(cd,nome,s,o){
   const wa=DB.cfg.wapp?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Agendei uma lavagem ('+cd+') — '+s.nome+' em '+fmtBR(o.data)+' às '+o.hora+'. Nome: '+nome)}">💬 Avisar no WhatsApp</a>`:'';
   document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)this.remove()">
     <div class="box" style="text-align:center">
-      <div style="font-size:44px">✅</div>
+      <div class="confete">🎉</div>
       <h3 style="justify-content:center;font-size:17px">Agendamento confirmado!</h3>
       <div class="pill" style="margin:10px 0">${cd}</div>
       <table style="text-align:left">
@@ -533,11 +539,13 @@ function login(){
     gestor=true;sessionStorage.setItem('lj_gestor','1');
     document.getElementById('gestorLock').classList.add('hidden');
     document.getElementById('gestorPanel').classList.remove('hidden');
-    renderGestor();toast('Bem-vindo, André!');
+    renderGestor();toast('Bem-vindo, '+esc(DB.cfg.gestorNome||'André')+'!');
   }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
   document.getElementById('gData').value=sel.data||hoje();
+  const gp=document.getElementById('gPerfil');
+  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div><div class="gn">'+esc(DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div>';
   renderAgenda();renderAtivos();renderFin();loadCfgForm();
 }
 /* --- agenda --- */
@@ -557,7 +565,7 @@ function renderAgenda(){
   box.innerHTML=list.map(o=>{
     const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status];
     let acoes='';
-    if(o.status==='agendado')acoes=`<button class="btn g" style="padding:9px;font-size:14px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
+    if(o.status==='agendado')acoes=`<button class="btn bl" style="padding:9px;font-size:14px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
     if(o.status==='andamento'){
       const p=o.timer?Math.min(100,Math.round((Date.now()-o.timer.start)/o.timer.dur*100)):0;
       const rest=o.timer?Math.max(0,o.timer.dur-(Date.now()-o.timer.start)):0;
@@ -684,7 +692,9 @@ function loadCfgForm(){
   document.getElementById('cInt').value=c.int;document.getElementById('cVagas').value=c.vagas;
   document.getElementById('cAlmI').value=c.almocoI;document.getElementById('cAlmF').value=c.almocoF;
   document.getElementById('cPix').value=c.pix;document.getElementById('cWapp').value=c.wapp;
-  document.getElementById('cNome').value=c.nome;
+  const cN=document.getElementById('cNome'),cG=document.getElementById('cGestor');
+  if(cN)cN.value=c.nome;
+  if(cG)cG.value=c.gestorNome||'André';
   const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
   renderCfgSvc();
@@ -727,8 +737,10 @@ function saveCfg(){
   c.almocoF=document.getElementById('cAlmF').value||'';
   c.pix=document.getElementById('cPix').value;
   c.wapp=document.getElementById('cWapp').value.replace(/\D/g,'');
-  c.nome=document.getElementById('cNome').value||c.nome;
-  save();renderSvcs();renderDays();renderSlots();toast('Configurações salvas ✅');
+  const cN2=document.getElementById('cNome'),cG2=document.getElementById('cGestor');
+  c.nome=(cN2&&cN2.value)||c.nome;
+  c.gestorNome=(cG2&&cG2.value)||c.gestorNome||'André';
+  save();renderSvcs();renderDays();renderSlots();renderGestor();toast('Configurações salvas ✅');
 }
 function trocaPin(){
   const p=document.getElementById('cPin').value.trim();
@@ -750,23 +762,30 @@ function restore(inp){
 function addCfgInputs(){
   const box=document.querySelector('#t-cfg .card');
   const div=document.createElement('div');
-  div.innerHTML=`<div class="card"><h3>🏪 Nome e logo da empresa</h3>
-    <label>Nome</label><input id="cNome">
-    <label style="margin-top:8px">Logo (envie a foto do logo — opcional)</label>
+  div.innerHTML=`<div class="card"><h3>🏪 Nome, logo e gestor</h3>
+    <label>Nome da empresa</label><input id="cNome">
+    <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
+    <label style="margin-top:8px">Logo (foto — opcional)</label>
     <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
-    <div class="hint">Sem logo enviado, o app usa o símbolo A.F embutido.</div></div>`;
+    <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
+    <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
+    <div class="hint">Sem logo/foto enviados, o app usa o símbolo A.F embutido.</div></div>`;
   box.parentNode.insertBefore(div.firstChild,box);
 }
 document.addEventListener('change',e=>{
-  if(e.target.id==='cLogo'&&e.target.files[0]){
+  const f=e.target;
+  if((f.id==='cLogo'||f.id==='cRosto')&&f.files[0]){
     const r=new FileReader();
-    r.onload=()=>{DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');};
-    r.readAsDataURL(e.target.files[0]);
+    r.onload=()=>{
+      if(f.id==='cLogo'){DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');}
+      else{DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+    };
+    r.readAsDataURL(f.files[0]);
   }
 });
 /* ============ TICKER ============ */
 setInterval(()=>{
-  if(!DB)return;
+  if(!DB||document.hidden)return;
   let mudou=false;
   DB.orders.forEach(o=>{
     if(o.status==='andamento'&&o.timer&&Date.now()>=o.timer.start+o.timer.dur){
@@ -779,6 +798,7 @@ setInterval(()=>{
   if(!document.getElementById('pg-agendar').classList.contains('hidden')&&sel.data){renderSlots();renderDays();}
 },15000);
 setInterval(()=>{
+  if(document.hidden)return;
   document.querySelectorAll('.prog .fill').forEach(f=>{
     const w=+f.style.width.replace('%','');if(w>0&&w<100)f.style.width=Math.min(100,w+0.5)+'%';
   });
