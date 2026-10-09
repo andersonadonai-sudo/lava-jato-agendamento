@@ -1,1 +1,1112 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.F Car Wash — Agendamento</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{color-scheme:dark;--bg:#0b0714;--card:#171021;--card2:#201634;--line:rgba(168,85,247,.26);--tx:#f3ecff;--mut:#a493c8;--ok:#34d399;--warn:#fbbf24;--bad:#f87171}
+body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(900px 520px at 85% -10%,rgba(124,58,237,.32),transparent 60%),radial-gradient(700px 500px at -10% 45%,rgba(88,28,135,.30),transparent 55%),var(--bg);color:var(--tx);font-size:16px;min-height:100vh;padding-bottom:100px}
+.metal{position:relative;overflow:hidden}
+.metal::after{content:'';position:absolute;top:-60%;left:-80%;width:45%;height:220%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);transform:rotate(12deg);animation:shine 3.8s ease-in-out infinite}
+@keyframes shine{0%,55%{left:-80%}100%{left:170%}}
+header{background:linear-gradient(135deg,#150c22,#251238);border-bottom:3px solid #8b2ff7;padding:20px 16px 16px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;box-shadow:0 3px 18px rgba(124,58,237,.4)}
+header .logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden;box-shadow:0 0 0 2px rgba(196,123,255,.6),0 0 20px rgba(139,47,247,.55)}
+header h1{font-size:20px;font-weight:800;letter-spacing:.3px;color:#fff}
+header .sub{font-size:13px;margin-top:3px;color:#c47bff;font-weight:700}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(19,11,31,.97);backdrop-filter:blur(10px);display:flex;border-top:1px solid var(--line);z-index:60;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:none;color:var(--mut);padding:11px 4px 13px;font-size:12px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+nav button span.ic{font-size:23px}
+nav button.on{color:#d9b8ff;text-shadow:0 0 14px rgba(168,85,247,.95)}
+main{max-width:680px;margin:0 auto;padding:18px 16px}
+.card{background:linear-gradient(165deg,var(--card),#110a1c);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.card h3{font-size:17px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#e9d5ff}
+.svc{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:.15s}
+.svc:active{transform:scale(.98)}
+.svc.sel{border-color:#c47bff;background:linear-gradient(160deg,rgba(139,47,247,.30),rgba(124,58,237,.08));box-shadow:0 0 0 3px rgba(168,85,247,.22),0 0 24px rgba(139,47,247,.4)}
+.svc .nm{font-weight:800;font-size:17px;color:#fff}
+.svc .ds{font-size:14px;color:var(--mut);margin-top:4px;line-height:1.5}
+.svc .pr{text-align:right;flex-shrink:0;margin-left:12px}
+.svc .pr b{font-size:18px;color:var(--ok);display:block}
+.svc .pr small{font-size:12px;color:var(--mut)}
+label{display:block;font-size:13px;font-weight:800;color:#b7a3dd;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.6px}
+input,select,textarea{width:100%;background:#120c1c;border:2px solid rgba(168,85,247,.28);border-radius:12px;padding:13px 14px;color:var(--tx);font-size:16px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,.25)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:6px}
+.day{background:var(--card2);border:2px solid var(--line);border-radius:13px;padding:9px 2px;text-align:center;cursor:pointer}
+.day .dw{font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase}
+.day .dn{font-size:19px;font-weight:800;margin:3px 0;color:#fff}
+.day .dv{font-size:10px;font-weight:800;border-radius:9px;padding:3px 0}
+.day.livre{border-color:rgba(52,211,153,.55)}.day.livre .dv{background:rgba(52,211,153,.15);color:var(--ok)}
+.day.quase{border-color:rgba(251,191,36,.55)}.day.quase .dv{background:rgba(251,191,36,.15);color:var(--warn)}
+.day.cheio{border-color:rgba(248,113,113,.55);opacity:.6}.day.cheio .dv{background:rgba(248,113,113,.15);color:var(--bad)}
+.day.fechado{opacity:.4}.day.fechado .dv{color:var(--mut)}
+.day.sel{background:linear-gradient(160deg,rgba(139,47,247,.34),rgba(124,58,237,.1));border-color:#c47bff;box-shadow:0 0 0 3px rgba(168,85,247,.22)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.slot{background:var(--card2);border:2px solid var(--line);border-radius:13px;padding:11px 4px;text-align:center;cursor:pointer;color:#fff}
+.slot .st{font-size:17px;font-weight:800}
+.slot .sv{font-size:11px;font-weight:800;margin-top:3px;border-radius:9px;padding:2px 0}
+.slot.off{opacity:.35;pointer-events:none}
+.slot.livre{border-color:rgba(52,211,153,.55)}.slot.livre .sv{color:var(--ok)}
+.slot.quase{border-color:rgba(251,191,36,.55)}.slot.quase .sv{color:var(--warn)}
+.slot.full{border-color:rgba(248,113,113,.55);opacity:.55;pointer-events:none}.slot.full .sv{color:var(--bad)}
+.slot.sel{background:linear-gradient(160deg,rgba(139,47,247,.38),rgba(124,58,237,.12));border-color:#c47bff;box-shadow:0 0 0 3px rgba(168,85,247,.25)}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn.p{background:linear-gradient(135deg,#c47bff 0%,#8b2ff7 38%,#5b1ea8 62%,#8b2ff7 100%);color:#fff;box-shadow:0 4px 18px rgba(139,47,247,.55),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn.g{background:linear-gradient(135deg,#34d399,#059669);color:#04231a}
+.btn.d{background:linear-gradient(135deg,#f87171,#dc2626);color:#fff}
+.btn.s{background:var(--card2);color:#e9d5ff;border:2px solid rgba(168,85,247,.4)}
+.btn.bl{background:linear-gradient(135deg,#60a5fa,#2563eb);color:#fff}
+.pager{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.os{background:linear-gradient(165deg,var(--card),#110a1c);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,.45);content-visibility:auto;contain-intrinsic-size:90px}
+.os .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.os .cd{font-size:12.5px;color:var(--mut);font-weight:800}
+.os .cl{font-weight:800;font-size:16.5px;margin-top:3px;color:#fff}
+.badge{padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:800;white-space:nowrap}
+.b-agd{background:rgba(96,165,250,.15);color:#93c5fd}
+.b-prog{background:rgba(251,191,36,.15);color:var(--warn)}
+.b-pronto{background:rgba(52,211,153,.15);color:var(--ok)}
+.b-pago{background:rgba(52,211,153,.15);color:var(--ok)}
+.b-cancel{background:rgba(248,113,113,.15);color:var(--bad)}
+.prog{background:#241736;border-radius:20px;height:24px;margin-top:14px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.prog .fill{height:100%;background:linear-gradient(90deg,#5b1ea8,#a855f7,#c47bff);border-radius:20px;transition:width 1s linear;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:800;color:#fff;min-width:36px}
+.pct{font-size:13.5px;color:var(--mut);margin-top:7px;text-align:center;font-weight:800}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+.kpi{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:15px}
+.kpi .l{font-size:12px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.kpi .v{font-size:22px;font-weight:800;margin-top:5px;color:#fff}
+.ok{color:var(--ok)}.am{color:var(--warn)}.bl{color:#93c5fd}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.pill{display:inline-block;background:rgba(168,85,247,.15);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12.5px;font-weight:800;margin:2px 4px 2px 0;color:#d9b8ff}
+.empty{text-align:center;color:var(--mut);font-size:15px;padding:34px 12px;line-height:1.7}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#34d399,#059669);color:#04231a;padding:13px 22px;border-radius:30px;font-size:15px;font-weight:800;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,.55);animation:tin .3s}
+.toast.err{background:linear-gradient(135deg,#f87171,#dc2626);color:#fff}
+@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.modal{position:fixed;inset:0;background:rgba(8,4,16,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal .box{background:linear-gradient(165deg,#1d1230,#120b1d);border:1px solid rgba(168,85,247,.45);border-radius:20px;padding:22px;width:100%;max-width:440px;max-height:88vh;overflow:auto;color:var(--tx);box-shadow:0 20px 60px rgba(0,0,0,.65),0 0 46px rgba(139,47,247,.3)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--mut);font-size:12px;text-transform:uppercase;padding:7px 4px;border-bottom:2px solid var(--line)}
+td{padding:9px 4px;border-bottom:1px solid rgba(168,85,247,.12);color:var(--tx)}
+.direita,td.r{text-align:right}
+.hint{font-size:13px;color:var(--mut);line-height:1.55;margin-top:9px}
+.wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:800;margin-top:10px}
+.confete{font-size:34px;display:inline-block;animation:conf .8s ease}
+@keyframes conf{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1)}}
+.hero{position:relative;border-radius:18px;overflow:hidden;margin-bottom:16px;min-height:150px;display:flex;align-items:center;justify-content:center;background:#150c22}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(1.2) hue-rotate(14deg)}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.45),rgba(26,18,38,.66));z-index:1;pointer-events:none}
+.hero .htxt{position:relative;z-index:2;text-align:center;padding:26px 18px;color:#fff;max-width:420px}
+.hero .htxt .hl{font-size:21px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.75);line-height:1.3}
+.hero .htxt .hs{font-size:14px;margin-top:6px;color:#d9b8ff;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+.hero .hlogo{position:relative;z-index:2;width:64px;height:64px;border-radius:50%;background:#fff;padding:4px;margin:0 auto 10px;box-shadow:0 4px 16px rgba(0,0,0,.55),0 0 26px rgba(139,47,247,.55);overflow:hidden}
+.gperfil{display:flex;align-items:center;gap:12px;background:var(--card2);border:2px solid rgba(168,85,247,.5);border-radius:16px;padding:12px 14px;margin-bottom:14px}
+.gperfil img,.gperfil .fz{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#241736;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.gperfil .gn{font-weight:800;font-size:16px;color:#fff}
+.gperfil .gr{font-size:12.5px;color:var(--mut);font-weight:700}
+
+/* ============ HOME + WIZARD — ROXO METALICO ============ */
+.homegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.hb{position:relative;overflow:hidden;background:linear-gradient(165deg,#221536,#160d24);border:1px solid rgba(168,85,247,.4);border-radius:18px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:15px;font-weight:800;color:#fff;cursor:pointer;transition:.15s;box-shadow:0 8px 22px rgba(0,0,0,.5);font-family:inherit}
+.hb .bi{font-size:30px;line-height:1;filter:drop-shadow(0 0 10px rgba(168,85,247,.7))}
+.hb small{font-size:11.5px;font-weight:700;color:var(--mut)}
+.hb:active{transform:scale(.95)}
+.hb-p{grid-column:1/-1;background:linear-gradient(135deg,#c47bff 0%,#8b2ff7 35%,#5b1ea8 62%,#8b2ff7 100%);border-color:rgba(255,255,255,.3);padding:18px;box-shadow:0 10px 30px rgba(139,47,247,.55),inset 0 1px 0 rgba(255,255,255,.3)}
+.hb-p .bi{font-size:34px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.hb-p b{color:#fff;font-size:19px;letter-spacing:1.5px;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.hb-p small{color:rgba(255,255,255,.88)}
+.hb-p::after{content:'';position:absolute;top:-60%;left:-80%;width:45%;height:220%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:rotate(12deg);animation:shine 3.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.5)}50%{box-shadow:0 0 0 16px rgba(168,85,247,0)}}
+.livecard{background:linear-gradient(165deg,var(--card),#110a1c);border:2px solid rgba(168,85,247,.4);border-radius:16px;padding:14px 16px;margin-bottom:4px;box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.lcrow{font-size:14.5px;color:#cbbfe6;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lcrow+.lcrow{margin-top:6px}
+.lc.grn{color:var(--ok);font-weight:800}
+.lc.red{color:var(--bad);font-weight:800}
+.hsvc{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card2);border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;transition:.15s}
+.hsvc:active{transform:scale(.98)}
+.hsvc .nm{font-weight:800;font-size:16px;color:#fff}
+.hsvc .ds{font-size:13px;color:var(--mut);margin-top:3px;line-height:1.45}
+.hsvc .pr{text-align:right;flex-shrink:0}
+.hsvc .pr b{font-size:17px;color:var(--ok);display:block}
+.hsvc .pr small{font-size:11.5px;color:var(--mut)}
+.whead{display:flex;align-items:center;gap:12px;background:linear-gradient(165deg,var(--card),#110a1c);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.wprog{flex:1;height:10px;background:#241736;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+#wBar{height:100%;width:25%;background:linear-gradient(90deg,#5b1ea8,#a855f7,#c47bff);border-radius:6px;transition:width .35s;box-shadow:0 0 12px rgba(168,85,247,.8)}
+.wlbl{font-size:12.5px;font-weight:800;color:#cbbfe6;white-space:nowrap}
+.ws{display:none}
+.ws.on{display:block;animation:fadein .25s}
+.btnrow{display:flex;gap:10px;margin:2px 0 16px}
+.btnrow .btn{flex:1}
+.back{background:rgba(168,85,247,.14);border:1px solid rgba(168,85,247,.4);border-radius:10px;padding:8px 14px;font-weight:800;color:#d9b8ff;font-size:14px;cursor:pointer;font-family:inherit}
+.center{text-align:center}
+.mbar{height:26px;background:#241736;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.mfill{height:100%;background:linear-gradient(90deg,#5b1ea8,#a855f7,#c47bff);border-radius:14px;display:flex;align-items:center;justify-content:flex-end;padding-right:9px;font-size:12px;font-weight:800;color:#fff;min-width:44px;transition:width .5s;box-shadow:0 0 14px rgba(168,85,247,.7)}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.pay button{background:var(--card2);border:2px solid var(--line);border-radius:13px;padding:13px 6px;font-size:14.5px;font-weight:800;color:#e9d5ff;cursor:pointer;font-family:inherit;transition:.15s}
+.pay button.sel{border-color:#c47bff;background:linear-gradient(160deg,rgba(139,47,247,.34),rgba(124,58,237,.1));box-shadow:0 0 0 3px rgba(168,85,247,.22)}
+.tabs2{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tabs2 button{flex:1;min-width:110px;background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:11px 8px;font-size:13.5px;font-weight:800;color:#cbbfe6;cursor:pointer;font-family:inherit}
+.tabs2 button.on{border-color:#c47bff;color:#fff;background:linear-gradient(160deg,rgba(139,47,247,.34),rgba(124,58,237,.1));box-shadow:0 0 0 3px rgba(168,85,247,.2)}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="hLogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><defs><linearGradient id="lgAF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3eaff"/><stop offset=".5" stop-color="#c9b3f5"/><stop offset="1" stop-color="#c9a0ff"/></linearGradient></defs><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#c47bff" stroke-width="5"/><g fill="none" stroke="#c9a0ff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><g fill="#fff" opacity=".9"><circle cx="20" cy="28" r="3" opacity=".5"/><circle cx="26" cy="22" r="2" opacity=".7"/><circle cx="17" cy="21" r="1.4" opacity=".6"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="url(#lgAF)" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#e8e8e8" text-anchor="middle" letter-spacing="1.5">CAR WASH</text><text x="50" y="86" font-family="Georgia,serif" font-size="5.2" font-style="italic" fill="#e0c9ff" text-anchor="middle">&quot;O Cuidado que faz Diferen&#231;a&quot;</text></svg></div>
+  <div>
+    <h1 id="hNome">Lava Jato</h1>
+    <div class="sub" id="hSub">Agende sua lavagem pelo celular</div>
+  </div>
+</header>
+
+<nav id="nav">
+  <button class="on" data-pg="home"><span class="ic">🏠</span>Início</button>
+  <button data-pg="agendar"><span class="ic">📅</span>Agendar</button>
+  <button data-pg="meus"><span class="ic">🚗</span>Minhas lavagens</button>
+  <button data-pg="gestor" id="navGestor" class="hidden"><span class="ic">📊</span>Gestor</button>
+</nav>
+
+<main>
+<!-- ================= HOME ================= -->
+<div id="pg-home">
+  <div class="hero" id="hero">
+    <img id="heroImg" alt="Carro sendo lavado" src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg">
+    <div style="position:relative;z-index:2;text-align:center;padding:22px 16px">
+      <div class="hlogo"><svg viewBox="0 0 100 100" style="width:100%;height:100%;display:block"><circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#c47bff" stroke-width="5"/><g fill="none" stroke="#c9a0ff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 34 q7-11 20-11 t20 11 l5 9 h-50 z"/><path d="M31 25 q6-7 13-7 t13 7" stroke-width="2.5"/><circle cx="33" cy="45" r="4.5" fill="#0a0a0a"/><circle cx="57" cy="45" r="4.5" fill="#0a0a0a"/></g><text x="52" y="66" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" fill="#fff" text-anchor="middle">A.F</text><text x="52" y="76" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="700" fill="#c47bff" text-anchor="middle" letter-spacing="1.5">CAR WASH</text></svg></div>
+      <div class="hl">Seu carro limpo e protegido</div>
+      <div class="hs">Agende pelo celular — pronto em ~2h20</div>
+    </div>
+  </div>
+  <div class="livecard" id="liveCard"></div>
+  <div class="homegrid">
+    <button class="hb hb-p metal" onclick="wNew()"><span class="bi">📅</span><b>AGENDAR AGORA</b><small>reserve seu horário em 1 minuto</small></button>
+    <button class="hb" onclick="go('meus')"><span class="bi">🚗</span><b>Minhas lavagens</b><small>acompanhe ao vivo</small></button>
+    <button class="hb" onclick="goValores()"><span class="bi">📋</span><b>Cardápio</b><small>serviços e preços</small></button>
+    <button class="hb" id="hbWa" onclick="waLoja()" style="display:none"><span class="bi">📞</span><b>WhatsApp</b><small>fale com a loja</small></button>
+  </div>
+  <div class="card">
+    <h3>⚡ Agende direto</h3>
+    <div id="homeSvc"></div>
+  </div>
+  <div class="hint center">🕐 Atendimento: <b id="homeHorario"></b> · 1 carro por horário</div>
+</div>
+
+<!-- ================= AGENDAR (PASSO A PASSO) ================= -->
+<div id="pg-agendar" class="hidden">
+  <div class="whead">
+    <div class="wprog"><div id="wBar"></div></div>
+    <div class="wlbl" id="wLbl">Passo 1 de 4</div>
+  </div>
+  <div class="ws on" id="ws1">
+  <div class="card">
+    <h3>1. Escolha o serviço</h3>
+    <div id="svcList"></div>
+  </div>
+  <div class="btnrow"><button class="btn p" onclick="wGo(2)">Continuar →</button></div>
+  </div>
+  <div class="ws" id="ws2">
+  <div class="card" id="cardData">
+    <h3>2. Dia e horário</h3>
+    <div class="days" id="dayList"></div>
+    <div class="hint" id="dayHint">🟢 livre · 🟡 quase cheio · 🔴 cheio — atualiza sozinho conforme a agenda enche</div>
+    <label>Horário de entrada — 1 carro por horário</label>
+    <div class="slots" id="slotList"></div>
+    <div class="hint" id="slotHint"></div>
+  </div>
+  <div class="btnrow"><button class="btn s" onclick="wBack()">← Voltar</button><button class="btn p" onclick="wGo(3)">Continuar →</button></div>
+  </div>
+  <div class="ws" id="ws3">
+  <div class="card" id="cardDados">
+    <h3>3. Seus dados</h3>
+    <div class="row">
+      <div><label>Nome</label><input id="fNome" placeholder="Seu nome"></div>
+      <div><label>WhatsApp</label><input id="fFone" placeholder="(33) 99999-9999" inputmode="tel"></div>
+    </div>
+    <label>Modelo do veículo</label>
+    <input id="fModelo" placeholder="Ex: Onix, HB20, Corolla...">
+    <label>Placa (opcional)</label>
+    <input id="fPlaca" placeholder="ABC-1D23" style="text-transform:uppercase">
+    <label>Observação (opcional)</label>
+    <textarea id="fObs" rows="2" placeholder="Ex: mancha no banco, suor no teto..."></textarea>
+    <label>Forma de pagamento</label>
+    <div class="pay" id="payList"></div>
+    <div class="hint" id="pixHint"></div>
+  </div>
+  <div class="btnrow"><button class="btn s" onclick="wBack()">← Voltar</button><button class="btn p" onclick="wGo(4)">Ver resumo →</button></div>
+  </div>
+  <div class="ws" id="ws4">
+  <div class="card" id="cardResumo" style="border-color:#7c3aed">
+    <h3>4. Resumo</h3>
+    <div id="resumo"></div>
+    <button class="btn p" style="margin-top:12px" onclick="confirmar()">✅ Confirmar agendamento</button>
+    <div class="hint" id="resumoHint"></div>
+  </div>
+  <div class="btnrow"><button class="btn s" onclick="wBack()">← Voltar</button></div>
+  </div>
+</div>
+
+<!-- ================= VALORES (CLIENTE) ================= -->
+<div id="pg-valores" class="hidden">
+  <div class="card">
+    <button class="back" onclick="go('home')">← Início</button>
+    <h3 style="margin-top:10px">📋 Cardápio de serviços</h3>
+    <div id="valoresCli"></div>
+  </div>
+</div>
+
+<!-- ================= MEUS AGENDAMENTOS ================= -->
+<div id="pg-meus" class="hidden">
+  <div class="card">
+    <h3>🚗 Minhas lavagens</h3>
+    <label>Seu WhatsApp (com DDD)</label>
+    <div class="row">
+      <div><input id="meuFone" placeholder="(33) 99999-9999" inputmode="tel"></div>
+      <div><button class="btn p" style="padding:13px" onclick="meusBuscar()">Buscar</button></div>
+    </div>
+    <div id="meusList" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<!-- ================= GESTOR ================= -->
+<div id="pg-gestor" class="hidden">
+  <div id="gestorLock">
+    <div class="card" style="text-align:center;padding:30px 16px">
+      <div style="font-size:40px">🔐</div>
+      <h3 style="justify-content:center;margin-top:8px">Painel do Gestor</h3>
+      <div class="hint" style="margin-bottom:14px">Área exclusiva do André (função financeira e agenda).</div>
+      <input type="password" id="pin" placeholder="PIN de acesso" inputmode="numeric" style="text-align:center;font-size:20px;letter-spacing:8px" maxlength="6">
+      <button class="btn p" style="margin-top:12px" onclick="login()">Entrar</button>
+      <div class="hint" id="pinHint"></div>
+    </div>
+  </div>
+  <div id="gestorPanel" class="hidden">
+    <div class="gperfil" id="gPerfil"></div>
+    <div class="tabs2" id="gtabs">
+      <button class="on" data-t="agenda">📋 Agenda</button>
+      <button data-t="fin">💰 Financeiro</button>
+      <button data-t="valores">💵 Valores</button>
+      <button data-t="cfg">⚙️ Configurações</button>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="t-agenda">
+      <div class="kpis" id="kpiAgd"></div>
+      <div class="card">
+        <h3>📅 Agenda do dia</h3>
+        <input type="date" id="gData" onchange="renderAgenda()">
+        <div id="agendaList" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <h3>🚗 Em lavagem agora</h3>
+        <div id="ativosList"></div>
+      </div>
+    </div>
+
+    <!-- FINANCEIRO -->
+    <div id="t-fin" class="hidden">
+      <div class="card">
+        <h3>🎯 Meta do mês</h3>
+        <div id="metaBox"></div>
+        <div class="row" style="margin-top:10px;align-items:end">
+          <div><label>Meta do mês (R$)</label><input type="number" id="cMeta" step="50" inputmode="decimal"></div>
+          <div><button class="btn p" style="width:100%" onclick="salvarMeta()">💾 Salvar meta</button></div>
+        </div>
+      </div>
+      <button class="btn bl" style="margin-bottom:16px" onclick="fechamentoMes()">🧾 Fechamento do mês (imprimir / PDF)</button>
+      <div class="kpis" id="kpiFin"></div>
+      <div class="tabs2">
+        <button class="on" data-f="rec">Receitas</button>
+        <button data-f="desp">Despesas</button>
+        <button data-f="pend">Pendentes</button>
+      </div>
+      <div id="f-rec">
+        <div class="card">
+          <h3>💰 Pagamentos recebidos</h3>
+          <div id="recList"></div>
+        </div>
+      </div>
+      <div id="f-desp" class="hidden">
+        <div class="card">
+          <h3>➕ Nova despesa</h3>
+          <div class="row">
+            <div><label>Data</label><input type="date" id="dData"></div>
+            <div><label>Valor R$</label><input type="number" id="dVal" step="0.01" inputmode="decimal"></div>
+          </div>
+          <label>Descrição</label>
+          <input id="dDesc" placeholder="Ex: sabonete, água, salário...">
+          <button class="btn d" style="margin-top:10px" onclick="addDesp()">Lançar despesa</button>
+        </div>
+        <div class="card"><h3>🧾 Despesas do período</h3><div id="despList"></div></div>
+      </div>
+      <div id="f-pend" class="hidden">
+        <div class="card">
+          <h3>⏳ Pagamentos pendentes</h3>
+          <div id="pendList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALORES -->
+    <div id="t-valores" class="hidden">
+      <div class="card">
+        <h3>💵 Valores das lavagens</h3>
+        <div class="hint" style="margin:0 0 12px">Altere nome, preço e duração — o cliente vê na hora. Salva sozinho.</div>
+        <div id="valoresSvc"></div>
+        <button class="btn s" onclick="addSvc()">➕ Adicionar serviço</button>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div id="t-cfg" class="hidden">
+      <div class="card">
+        <h3>🏪 Nome, logo e gestor</h3>
+        <label>Nome da empresa</label><input id="cNome">
+        <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
+        <label style="margin-top:8px">Logo (foto — opcional)</label>
+        <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
+        <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
+        <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
+        <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
+        <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
+        <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div>
+      </div>
+      <div class="card">
+        <h3>🕐 Funcionamento</h3>
+        <div class="row">
+          <div><label>Abre</label><input type="time" id="cAbre"></div>
+          <div><label>Fecha</label><input type="time" id="cFecha"></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div><label>Duração por carro</label>
+            <select id="cInt"><option value="120">2h00</option><option value="140">2h20</option><option value="160">2h40</option><option value="180">3h00</option></select></div>
+          <div><label>Carros por horário</label><input type="number" id="cVagas" min="1" max="6"></div>
+        </div>
+        <label style="margin-top:10px">Pausa almoço</label>
+        <div class="row">
+          <div><input type="time" id="cAlmI"></div>
+          <div><input type="time" id="cAlmF"></div>
+        </div>
+        <label>Dias fechados</label>
+        <div id="cDias" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        <button class="btn p" style="margin-top:14px" onclick="saveCfg()">💾 Salvar configurações</button>
+      </div>
+      <div class="card">
+        <h3>💳 Pagamento e PIX</h3>
+        <label>Chave PIX (mostrada ao cliente)</label>
+        <input id="cPix">
+        <label>WhatsApp da empresa</label>
+        <input id="cWapp" placeholder="5533999999999">
+        <button class="btn p" style="margin-top:10px" onclick="saveCfg()">💾 Salvar</button>
+      </div>
+      <div class="card">
+        <h3>🔐 Segurança</h3>
+        <label>PIN do André</label>
+        <input type="password" id="cPinA" inputmode="numeric" maxlength="6" style="text-align:center;letter-spacing:6px">
+        <label style="margin-top:8px">PIN da Lysa</label>
+        <input type="password" id="cPinL" inputmode="numeric" maxlength="6" style="text-align:center;letter-spacing:6px">
+        <button class="btn p" style="margin-top:10px" onclick="salvarPins()">Salvar acessos</button>
+        <div class="hint">PINs iniciais: André <b>1234</b> · Lysa <b>4321</b>. O cliente NÃO vê esta área — acesso pelo toque 5x no logo.</div>
+        <div class="hr"></div>
+        <button class="btn s" onclick="backup()">⬇️ Backup (baixar dados)</button>
+        <button class="btn s" style="margin-top:8px" onclick="document.getElementById('impFile').click()">⬆️ Restaurar backup</button>
+        <input type="file" id="impFile" accept=".json" class="hidden" onchange="restore(this)">
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+<div id="modalRoot"></div>
+
+<script>
+/* ============ DADOS ============ */
+const LSK='lava_jato_v1';
+const HERO_PADRAO='https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=75&fm=jpg';
+let DB=null, gestor=false, gestorAtual=null, sel={svc:null,data:null,hora:null,pag:null}, meuFone='';
+const DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const hoje=()=>new Date().toISOString().slice(0,10);
+const agoraMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const fmtBR=d=>{if(!d)return'';const[a,b,c]=d.split('-');return c+'/'+b};
+const brl=v=>(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc=s=>String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+const fone=()=>localStorage.getItem('lj_fone')||'';
+const chkPin=v=>{const i=(DB.cfg.pins||[]).indexOf(v);return i<0?null:((DB.cfg.nomes||{})[v]||'Gestor')};
+
+function seed(){
+  return {
+    cfg:{
+      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André', hero:HERO_PADRAO,
+      abre:'08:00', fecha:'17:00', int:140, vagas:1,
+      almocoI:'', almocoF:'', fechados:[0],
+      pix:'Chave PIX será configurada pelo gestor',
+      meta:3000,
+      pins:['1234','4321'],
+      nomes:{'1234':'André','4321':'Lysa'}
+    },
+    svc:[
+      {id:'conv', nome:'Lavagem Convencional', desc:'Lavagem externa completa: carroceria, rodas, vidros e interior aspirado. O básico bem feito.', preco:60, dur:120},
+      {id:'det', nome:'Lavagem com Cera Protetora', desc:'Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.', preco:80, dur:150},
+      {id:'hig', nome:'Higienização', desc:'Higienização interna completa: limpeza profunda de bancos, carpete, teto e ar-condicionado. Mata bactérias e odores.', preco:120, dur:150}
+    ],
+    orders:[], pay:[], desp:[], seq:1
+  };
+}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined||!DB.cfg.hero)DB.cfg.hero=HERO_PADRAO;if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';if(!DB.cfg.pins){const p0=DB.cfg.pin||'1234';DB.cfg.pins=[p0,'4321'];DB.cfg.nomes={};DB.cfg.nomes[p0]=DB.cfg.gestorNome||'André';DB.cfg.nomes['4321']='Lysa';delete DB.cfg.pin;}if(DB.cfg.meta===undefined)DB.cfg.meta=3000;save();}
+function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
+function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
+
+/* ============ NAV ============ */
+function go(pg){
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.pg===pg));
+  ['home','agendar','meus','gestor','valores'].forEach(p=>{const el=document.getElementById('pg-'+p);if(!el)return;const was=el.classList.contains('hidden');el.classList.toggle('hidden',p!==pg);if(was&&p===pg){el.classList.remove('pager');void el.offsetWidth;el.classList.add('pager');}});
+  if(pg==='meus'){document.getElementById('meuFone').value=meuFone||fone();if(meuFone||fone())meusBuscar();}
+  if(pg==='gestor'&&gestor)renderGestor();
+  if(pg==='home')liveHome();
+  window.scrollTo(0,0);
+}
+document.getElementById('nav').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.classList.contains('hidden'))return;
+  go(b.dataset.pg);
+});
+
+/* ============ AGENDAR ============ */
+function renderSvcs(){
+  document.getElementById('hNome').textContent=DB.cfg.nome;
+  const hi=document.getElementById('heroImg');
+  if(hi&&!hi.getAttribute('src'))hi.src=DB.cfg.hero||HERO_PADRAO;
+  const ld=document.getElementById('hLogo');if(ld&&DB.cfg.logo&&!ld.dataset.custom){ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';}
+  document.title=DB.cfg.nome+' — Agendamento';
+  document.getElementById('svcList').innerHTML=DB.svc.map(s=>`
+    <div class="svc ${sel.svc===s.id?'sel':''}" onclick="pickSvc('${s.id}')">
+      <div><div class="nm">${esc(s.nome)}</div><div class="ds">${esc(s.desc)}<br>⏱️ ~${Math.floor(s.dur/60)}h${s.dur%60?''+(s.dur%60):''} de lavagem</div></div>
+      <div class="pr"><b>${brl(s.preco)}</b><small>+/- ${s.dur} min</small></div>
+    </div>`).join('');
+}
+function pickSvc(id){sel.svc=id;renderSvcs();sel.data=null;sel.hora=null;renderSlots();resumo();wGo(2);}
+
+function renderSlots(){
+  const d=sel.data||hoje();
+  const box=document.getElementById('slotList');
+  const di=new Date(d+'T12:00').getDay();
+  if((DB.cfg.fechados||[]).includes(di)){box.innerHTML='<div class="empty" style="grid-column:1/-1">Fechado neste dia 🚫</div>';sel.hora=null;resumo();return;}
+  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||140;
+  const ai=hm2m(DB.cfg.almocoI||'12:00'),af=hm2m(DB.cfg.almocoF||'13:00');
+  const vagas=+DB.cfg.vagas||1;
+  let html='',livres=0;
+  for(let m=ini;m+(DB.svc.find(s=>s.id===sel.svc)?.dur||140)/2<=fim;m+=int){
+    const t=hm(m);
+    const almoco=DB.cfg.almocoI&&m>=ai&&m<af;
+    const q=DB.orders.filter(o=>o.data===d&&o.hora===t&&!['cancelado'].includes(o.status)).length;
+    const rest=Math.max(0,vagas-q);
+    const cheio=rest<=0;
+    const passado=(d===hoje()&&m<=agoraMin()+30);
+    const off=almoco||passado;
+    if(!off&&!cheio)livres+=rest;
+    const durSel=(DB.svc.find(s=>s.id===sel.svc)?.dur)||140;
+    const st=cheio?'full':(vagas===1?'livre':(rest===1?'quase':'livre'));
+    const sub=off?'—':(cheio?'ocupado':(vagas===1?('pronto ~'+hm(m+durSel)):(rest+' vaga'+(rest>1?'s':''))));
+    html+=`<div class="slot ${off?'off':''} ${st} ${sel.hora===t?'sel':''}" onclick="pickHora('${t}')"><div class="st">${t}</div><div class="sv">${sub}</div></div>`;
+  }
+  box.innerHTML=html||'<div class="empty">Nenhum horário configurado.</div>';
+  document.getElementById('slotHint').innerHTML=`🟢 livre · 🔴 ocupado — <b>cada horário recebe 1 carro</b> e a lavagem leva <b>~2h20</b>. O horário mostra quando o carro fica pronto. Atualiza sozinho conforme a agenda enche.${livres?(' <b>'+livres+' horário(s) livre(s) no dia.</b>'):' <b>Dia cheio — escolha outro.</b>'}`;
+  resumo();
+}
+function renderDays(){
+  const box=document.getElementById('dayList');
+  if(!box)return;
+  const base=new Date();
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(base);d.setDate(base.getDate()+i);
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const di=d.getDay();
+    if((DB.cfg.fechados||[]).includes(di)){html+=`<div class="day fechado"><div class="dw">${DIAS[di]}</div><div class="dn">${d.getDate()}</div><div class="dv">fechado</div></div>`;continue;}
+    const cap=capDia(ds);
+    const st=cap.rest<=0?'cheio':(cap.rest<=cap.total*0.34?'quase':'livre');
+    html+=`<div class="day ${st} ${sel.data===ds?'sel':''}" onclick="pickData('${ds}')"><div class="dw">${DIAS[di]}</div><div class="dn">${d.getDate()}</div><div class="dv">${cap.rest<=0?'CHEIO':cap.rest+' livre'+(cap.rest>1?'s':'')}</div></div>`;
+  }
+  box.innerHTML=html;
+}
+function capDia(ds){
+  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||140;
+  const ai=hm2m(DB.cfg.almocoI||'12:00'),af=hm2m(DB.cfg.almocoF||'13:00');
+  const vagas=+DB.cfg.vagas||1;
+  const durM=DB.svc.length?DB.svc.reduce((s,x)=>s+x.dur,0)/DB.svc.length:140;
+  let total=0,usado=0;
+  for(let m=ini;m+durM/2<=fim;m+=int){
+    if(DB.cfg.almocoI&&m>=ai&&m<af)continue;
+    if(ds===hoje()&&m<=agoraMin()+30)continue;
+    total+=vagas;
+    const t=hm(m);
+    usado+=DB.orders.filter(o=>o.data===ds&&o.hora===t&&!['cancelado'].includes(o.status)).length;
+  }
+  return {total,rest:Math.max(0,total-usado)};
+}
+const hm2m=t=>{const[a,b]=t.split(':');return +a*60+ +b};
+function pickData(v){sel.data=v;sel.hora=null;renderDays();renderSlots();}
+function pickHora(t){sel.hora=t;renderSlots();wGo(3);}
+
+function renderPay(){
+  const ops=[['pix','⚡ PIX'],['dinheiro','💵 Dinheiro'],['cartao','💳 Cartão']];
+  document.getElementById('payList').innerHTML=ops.map(([k,l])=>`<button class="${sel.pag===k?'sel':''}" onclick="sel.pag='${k}';renderPay();resumo()">${l}</button>`).join('');
+  document.getElementById('pixHint').innerHTML=sel.pag==='pix'?'⚡ Pagando no PIX: mostre o comprovante na chegada. Chave: <b>'+esc(DB.cfg.pix)+'</b>':sel.pag==='dinheiro'?'💵 Leve troco se precisar.':'💳 Maquininha disponível no local.';
+}
+
+['fNome','fFone','fModelo','fPlaca','fObs'].forEach(id=>{
+  document.addEventListener('input',e=>{if(e.target.id===id)resumo();});
+});
+
+function resumo(){
+  const s=DB.svc.find(x=>x.id===sel.svc);
+  const mod=document.getElementById('fModelo').value.trim();
+  const pag={pix:'PIX',dinheiro:'Dinheiro',cartao:'Cartão'}[sel.pag]||'—';
+  let h='<table>';
+  h+=`<tr><td>Serviço</td><td class="r">${s?esc(s.nome):'<i>escolha acima</i>'}</td></tr>`;
+  h+=`<tr><td>Valor</td><td class="r ok"><b>${s?brl(s.preco):'—'}</b></td></tr>`;
+  h+=`<tr><td>Data</td><td class="r">${sel.data?fmtBR(sel.data)+' ('+DIAS[new Date(sel.data+'T12:00').getDay()]+')':'<i>escolha acima</i>'}</td></tr>`;
+  h+=`<tr><td>Horário</td><td class="r">${sel.hora||'<i>escolha acima</i>'}</td></tr>`;
+  h+=`<tr><td>Pagamento</td><td class="r">${pag}</td></tr>`;
+  if(mod)h+=`<tr><td>Veículo</td><td class="r">${esc(mod)}</td></tr>`;
+  h+=`<tr><td>Previsão de término</td><td class="r bl">${s&&sel.hora?prevFim(sel.hora,s.dur):'—'}</td></tr></table>`;
+  document.getElementById('resumo').innerHTML=h;
+  document.getElementById('resumoHint').innerHTML='O cronômetro começa quando a equipe inicia a lavagem — você acompanha o andamento em <b>Minhas lavagens</b> e o status muda para PRONTO automaticamente.';
+}
+function prevFim(hora,dur){const m=hm2m(hora)+dur;return hm(m>=1440?1439:m)+(m>=1440?' (dia seguinte)':'')+' aprox.'}
+
+function confirmar(){
+  const s=DB.svc.find(x=>x.id===sel.svc);
+  const nome=document.getElementById('fNome').value.trim();
+  const fo=document.getElementById('fFone').value.trim();
+  const mod=document.getElementById('fModelo').value.trim();
+  const placa=document.getElementById('fPlaca').value.trim().toUpperCase();
+  const obs=document.getElementById('fObs').value.trim();
+  if(!s)return toast('Escolha um serviço',1);
+  if(!sel.data)return toast('Escolha a data',1);
+  if(!sel.hora)return toast('Escolha o horário',1);
+  if(!nome)return toast('Digite seu nome',1);
+  if(fo.replace(/\D/g,'').length<10)return toast('WhatsApp inválido',1);
+  if(!sel.pag)return toast('Escolha a forma de pagamento',1);
+  const q=DB.orders.filter(o=>o.data===sel.data&&o.hora===sel.hora&&!['cancelado'].includes(o.status)).length;
+  if(q>=(+DB.cfg.vagas||1))return toast('Este horário acabou de encher — escolha outro',1);
+  const cd='AG'+String(DB.seq++).padStart(4,'0');
+  DB.orders.push({id:Date.now(),cd,nome,fone:fo,modelo:mod||'—',placa,obs,svc:s.id,svcNome:s.nome,preco:s.preco,dur:s.dur,data:sel.data,hora:sel.hora,pag:sel.pag,status:'agendado',criado:Date.now(),timer:null,pago:false,pagoEm:null});
+  save();
+  localStorage.setItem('lj_fone',fo);
+  sel={svc:null,data:null,hora:null,pag:null};
+  document.getElementById('fNome').value='';document.getElementById('fModelo').value='';document.getElementById('fPlaca').value='';document.getElementById('fObs').value='';
+  renderSvcs();renderDays();renderSlots();renderPay();resumo();
+  modalConfirm(cd,nome,s,sel0());
+}
+function sel0(){return DB.orders[DB.orders.length-1];}
+
+function modalConfirm(cd,nome,s,o){
+  const wa=DB.cfg.wapp?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Agendei uma lavagem ('+cd+') — '+s.nome+' em '+fmtBR(o.data)+' às '+o.hora+'. Nome: '+nome)}">💬 Avisar no WhatsApp</a>`:'';
+  document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)this.remove()">
+    <div class="box" style="text-align:center">
+      <div class="confete">🎉</div>
+      <h3 style="justify-content:center;font-size:17px">Agendamento confirmado!</h3>
+      <div class="pill" style="margin:10px 0">${cd}</div>
+      <table style="text-align:left">
+        <tr><td>Serviço</td><td class="r">${esc(s.nome)}</td></tr>
+        <tr><td>Quando</td><td class="r">${fmtBR(o.data)} (${DIAS[new Date(o.data+'T12:00').getDay()]}) às ${o.hora}</td></tr>
+        <tr><td>Valor</td><td class="r ok"><b>${brl(s.preco)}</b> · ${o.pag}</td></tr>
+        <tr><td>Término previsto</td><td class="r bl">${prevFim(o.hora,s.dur)}</td></tr>
+      </table>
+      <div class="hint">Chegue no horário marcado. Quando a equipe começar, o andamento aparece em <b>Minhas lavagens</b> 🚗</div>
+      ${wa}
+      <button class="btn p" style="margin-top:14px" onclick="fecharModal();go('home')">Fechar</button>
+    </div></div>`;
+  toast('Agendamento confirmado!');
+}
+
+/* ============ WIZARD + HOME ============ */
+let wcur=1;
+function wGo(n){
+  if(n>=2&&!sel.svc)return toast('Escolha um serviço primeiro',1);
+  if(n>=3&&(!sel.data||!sel.hora))return toast('Escolha dia e horário',1);
+  wcur=n;
+  for(let i=1;i<=4;i++){const el=document.getElementById('ws'+i);if(el)el.classList.toggle('on',i===n);}
+  const bar=document.getElementById('wBar');if(bar)bar.style.width=(n/4*100)+'%';
+  const lbl=document.getElementById('wLbl');if(lbl)lbl.textContent='Passo '+n+' de 4';
+  if(n===2){renderDays();renderSlots();}
+  if(n>=3)resumo();
+  window.scrollTo(0,0);
+}
+function wBack(){wGo(Math.max(1,wcur-1));}
+function wNew(){sel={svc:null,data:null,hora:null,pag:null};renderSvcs();renderDays();renderSlots();resumo();wGo(1);}
+function liveHome(){
+  const d=new Date(),m=d.getHours()*60+d.getMinutes();
+  const diaFechado=(DB.cfg.fechados||[]).includes(d.getDay());
+  const cap=diaFechado?{rest:0}:capDia(hoje());
+  const abre=hm2m(DB.cfg.abre),fecha=hm2m(DB.cfg.fecha);
+  const aberto=!diaFechado&&m>=abre&&m<fecha;
+  const st=diaFechado?'<span class="lc red">🔴 Fechado hoje</span>':(cap.rest<=0?'<span class="lc red">🔴 Hoje está cheio — amanhã tem vaga!</span>':'<span class="lc grn">🟢 '+cap.rest+' horário'+(cap.rest>1?'s':'')+' livre'+(cap.rest>1?'s':'')+' hoje</span>');
+  let prox=null;
+  if(aberto&&cap.rest>0){
+    const vagas=+DB.cfg.vagas||1,ai=hm2m(DB.cfg.almocoI||'12:00'),af=hm2m(DB.cfg.almocoF||'13:00');
+    for(let x=Math.max(abre,m+30);x+70<=fecha;x+=+DB.cfg.int||140){
+      const t=hm(x);
+      if(DB.cfg.almocoI&&x>=ai&&x<af)continue;
+      if(DB.orders.filter(o=>o.data===hoje()&&o.hora===t&&!['cancelado'].includes(o.status)).length>=vagas)continue;
+      prox=t;break;
+    }
+  }
+  const ab=aberto?'🟢 <b>Aberto agora</b>':'🕐 <b>'+((DB.cfg.fechados||[]).includes(d.getDay())?'Fechado hoje':'Abre às '+DB.cfg.abre)+'</b>';
+  const lc=document.getElementById('liveCard');
+  if(lc)lc.innerHTML='<div class="lcrow">'+ab+(prox?' · ⏱️ próxima vaga hoje: <b>'+prox+'</b>':'')+'</div><div class="lcrow">'+st+'</div>';
+  const hh=document.getElementById('homeHorario');
+  if(hh)hh.textContent=DB.cfg.abre+' às '+DB.cfg.fecha+', seg a sáb';
+  const w=document.getElementById('hbWa');if(w)w.style.display=DB.cfg.wapp?'flex':'none';
+}
+function renderHomeSvc(){
+  const el=document.getElementById('homeSvc');if(!el)return;
+  el.innerHTML=DB.svc.map(s=>`
+    <div class="hsvc" onclick="agendarDireto('${s.id}')">
+      <div><div class="nm">${esc(s.nome)}</div><div class="ds">${esc(s.desc)}</div></div>
+      <div class="pr"><b>${brl(s.preco)}</b><small>⏱️ ~${Math.floor(s.dur/60)}h${s.dur%60?''+(s.dur%60):''}</small></div>
+    </div>`).join('');
+}
+function agendarDireto(id){sel={svc:id,data:null,hora:null,pag:null};renderSvcs();go('agendar');wGo(2);}
+function goValores(){
+  const el=document.getElementById('valoresCli');if(!el)return;
+  el.innerHTML=DB.svc.map(s=>`
+    <div class="hsvc" style="cursor:default">
+      <div><div class="nm">${esc(s.nome)}</div><div class="ds">${esc(s.desc)}</div></div>
+      <div class="pr"><b>${brl(s.preco)}</b><small>⏱️ ~${Math.floor(s.dur/60)}h${s.dur%60?''+(s.dur%60):''}</small></div>
+    </div>`).join('')+'<button class="btn p" style="width:100%;margin-top:4px" onclick="wNew()">📅 Quero agendar</button>';
+  go('valores');
+}
+function waLoja(){if(!DB.cfg.wapp)return toast('WhatsApp ainda não configurado pelo gestor',1);window.open('https://wa.me/'+DB.cfg.wapp,'_blank');}
+function fecharModal(){document.getElementById('modalRoot').innerHTML='';wGo(1);}
+
+/* ============ MEUS ============ */
+function meusBuscar(){
+  const f=document.getElementById('meuFone').value.replace(/\D/g,'');
+  if(f.length<10)return toast('Digite o telefone',1);
+  meuFone=f;localStorage.setItem('lj_fone',f);
+  const list=DB.orders.filter(o=>o.fone.replace(/\D/g,'')===f).sort((a,b)=>(b.data+b.hora).localeCompare(a.data+a.hora));
+  renderMeus(list);
+}
+function renderMeus(list){
+  const box=document.getElementById('meusList');
+  if(!list||!list.length){box.innerHTML='<div class="empty">Nenhuma lavagem encontrada para este telefone.<br>Agende a primeira! 🚗</div>';return;}
+  box.innerHTML=list.map(o=>{
+    let extra='';
+    if(o.status==='andamento'&&o.timer){
+      const p=Math.min(1,(Date.now()-o.timer.start)/o.timer.dur);
+      const pct=Math.round(p*100);
+      const rest=Math.max(0,o.timer.dur-(Date.now()-o.timer.start));
+      const restTxt=rest>60000?Math.ceil(rest/60000)+' min restantes':'quase lá!';
+      extra=`<div class="prog"><div class="fill" style="width:${Math.max(6,pct)}%">${pct}%</div></div><div class="pct">🧽 Em lavagem — ${restTxt}</div>`;
+    }
+    if(o.status==='pronto')extra=`<div class="pct" style="color:#2e7d32">✨ PRONTO! Pode buscar o carro.</div>`;
+    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
+    if(o.status==='pronto'&&!o.pago)extra+=`<button class="btn s" style="margin-top:10px;padding:9px" onclick="aviseiPago('${o.cd}')">✅ Já paguei — avisar a loja</button>`;
+    if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#f7f3fd;border:2px dashed #d8ccf0;border-radius:12px;padding:12px;font-size:14px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
+    const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
+    return `<div class="os">
+      <div class="top"><div><div class="cd">${o.cd} · ${fmtBR(o.data)} ${o.hora}</div><div class="cl">${esc(o.svcNome)} · ${esc(o.modelo)}</div></div>
+      <span class="badge ${badge[0]}">${badge[1]}</span></div>
+      <div style="font-size:14px;color:#6b5f85;margin-top:6px">${brl(o.preco)} · ${o.pag.toUpperCase()}${o.placa?' · '+esc(o.placa):''}</div>
+      ${extra}
+      ${o.status==='agendado'?`<button class="btn s" style="margin-top:10px;padding:9px" onclick="cancelar('${o.cd}')">Cancelar agendamento</button>`:''}
+      ${o.status!=='pago'&&o.status!=='cancelado'&&o.status!=='pronto'&&o.status!=='andamento'?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Sobre meu agendamento '+o.cd+' ('+o.svcNome+' em '+fmtBR(o.data)+' às '+o.hora+')')}" style="margin-top:10px">💬 Falar com a loja</a>`:''}
+    </div>`;
+  }).join('');
+}
+function aviseiPago(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  o.avisoPago=true;save();meusBuscar();toast('Loja avisada do pagamento ✅');
+}
+function cancelar(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  if(o.status!=='agendado')return toast('Só é possível cancelar antes de começar',1);
+  if(!confirm('Cancelar o agendamento '+cd+'?'))return;
+  o.status='cancelado';save();meusBuscar();toast('Agendamento cancelado');
+}
+
+/* ============ GESTOR ============ */
+document.getElementById('gtabs').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-t]');if(!b)return;
+  document.querySelectorAll('#gtabs button').forEach(x=>x.classList.toggle('on',x===b));
+  ['agenda','fin','cfg','valores'].forEach(t=>document.getElementById('t-'+t).classList.toggle('hidden',t!==b.dataset.t));
+  if(b.dataset.t==='fin')renderFin();
+  if(b.dataset.t==='valores')renderValores();
+});
+document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+function login(){
+  const who=chkPin(document.getElementById('pin').value);
+  if(who){gestor=true;gestorAtual=who;sessionStorage.setItem('lj_gestor','1');
+    document.getElementById('gestorLock').classList.add('hidden');
+    document.getElementById('gestorPanel').classList.remove('hidden');
+    const ng=document.getElementById('navGestor');ng.classList.remove('hidden');
+    document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===ng));
+    ['home','agendar','meus','valores'].forEach(p=>document.getElementById('pg-'+p).classList.add('hidden'));
+    document.getElementById('pg-gestor').classList.remove('hidden');
+    fecharModalGestor();
+    window.scrollTo(0,0);
+    renderGestor();toast('Bem-vindo, '+who+'! 🔐');
+  }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
+}
+function renderGestor(){
+  document.getElementById('gData').value=sel.data||hoje();
+  const gp=document.getElementById('gPerfil');
+  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div style="flex:1"><div class="gn">'+esc(gestorAtual||DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div><button class="btn s" style="width:auto;padding:8px 14px;font-size:12.5px" onclick="sairGestor()">Sair</button>';
+  renderAgenda();renderAtivos();renderFin();loadCfgForm();
+}
+/* --- agenda --- */
+function renderAgenda(){
+  const d=document.getElementById('gData').value||hoje();
+  const list=DB.orders.filter(o=>o.data===d).sort((a,b)=>a.hora.localeCompare(b.hora));
+  const kpiAgd=list.filter(o=>o.status==='agendado').length;
+  const kpiAtv=DB.orders.filter(o=>o.status==='andamento').length;
+  const kpiFat=DB.pay.filter(p=>p.data===d).reduce((s,p)=>s+p.valor,0);
+  document.getElementById('kpiAgd').innerHTML=`
+    <div class="kpi"><div class="l">Agendados no dia</div><div class="v bl">${kpiAgd}</div></div>
+    <div class="kpi"><div class="l">Em lavagem agora</div><div class="v am">${kpiAtv}</div></div>
+    <div class="kpi"><div class="l">Faturado no dia</div><div class="v ok">${brl(kpiFat)}</div></div>
+    <div class="kpi"><div class="l">Lavagens no dia</div><div class="v">${list.filter(o=>!['cancelado'].includes(o.status)).length}</div></div>`;
+  const box=document.getElementById('agendaList');
+  if(!list.length){box.innerHTML='<div class="empty">Nenhum agendamento neste dia.</div>';return;}
+  box.innerHTML=list.map(o=>{
+    const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status];
+    let acoes='';
+    if(o.status==='agendado')acoes=`<button class="btn bl" style="padding:9px;font-size:14px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
+    if(o.status==='andamento'){
+      const p=o.timer?Math.min(100,Math.round((Date.now()-o.timer.start)/o.timer.dur*100)):0;
+      const rest=o.timer?Math.max(0,o.timer.dur-(Date.now()-o.timer.start)):0;
+      acoes=`<div class="prog"><div class="fill" style="width:${Math.max(6,p)}%">${p}%</div></div>
+      <div class="pct">⏱️ ${rest>60000?Math.ceil(rest/60000)+' min restantes':'tempo estourado — finalize quando terminar'}</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn p" style="padding:9px;font-size:13.5px" onclick="chamarCliente('${o.cd}')">✅ Lavagem concluída</button>
+        <button class="btn s" style="padding:9px;font-size:13.5px" onclick="reajustar('${o.cd}')">⏱️ +15min</button>
+      </div>`;
+    }
+    if(o.status==='pronto'){
+      const mins=o.timer&&o.timer.fim?Math.round((Date.now()-o.timer.fim)/60000):0;
+      acoes=(o.avisoPago?'<div class="pct" style="color:#9a7d0a">🟠 Cliente avisou que já pagou</div>':'')+`<div class="pct" style="color:#2e7d32">Pronto há ${mins} min</div>
+      <button class="btn g" style="padding:9px;font-size:13.5px;margin-top:6px" onclick="receber('${o.cd}')">💰 Receber ${brl(o.preco)} (${o.pag})</button>`;
+    }
+    if(o.status==='pago')acoes=`<div class="hint">💚 Pago em ${new Date(o.pagoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · ${o.pag}</div>`;
+    return `<div class="os">
+      <div class="top"><div><div class="cd">${o.cd} · ${o.hora}</div><div class="cl">${esc(o.nome)} · ${esc(o.modelo)}</div></div>
+      <span class="badge ${badge[0]}">${badge[1]}</span></div>
+      <div style="font-size:14px;color:#6b5f85;margin-top:4px">${esc(o.svcNome)} · ${brl(o.preco)} · ${o.pag}${o.placa?' · '+esc(o.placa):''}${o.obs?'<br>📝 '+esc(o.obs):''}</div>
+      <div style="font-size:14px;color:#7d7198;margin-top:4px">📞 ${esc(o.fone)}</div>
+      ${acoes}
+      ${o.status!=='pago'&&o.status!=='andamento'&&o.status!=='pronto'?`<button class="btn s" style="padding:7px;font-size:12.5px;margin-top:8px" onclick="delOrder('${o.cd}')">🗑 Remover</button>`:''}
+    </div>`;
+  }).join('');
+}
+function iniciar(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  o.status='andamento';
+  o.timer={start:Date.now(),dur:(o.dur||140)*60000};
+  save();renderAgenda();renderAtivos();toast('Lavagem iniciada — cronômetro rodando ⏱️');
+}
+function chamarCliente(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  o.status='pronto';o.timer={...o.timer,fim:Date.now()};
+  save();renderAgenda();renderAtivos();toast('Cliente avisado: carro pronto ✨');
+}
+function reajustar(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o||!o.timer)return;
+  o.timer.dur+=15*60000;save();renderAgenda();toast('+15 min adicionados');
+}
+function delOrder(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  if(!confirm('Remover '+cd+' definitivamente?'))return;
+  DB.orders=DB.orders.filter(x=>x.cd!==cd);save();renderAgenda();renderAtivos();
+}
+function renderAtivos(){
+  const at=DB.orders.filter(o=>['andamento','pronto'].includes(o.status));
+  const box=document.getElementById('ativosList');
+  if(!at.length){box.innerHTML='<div class="empty">Nada em lavagem agora. 😴</div>';return;}
+  box.innerHTML=at.map(o=>{
+    const p=o.timer?Math.min(100,Math.round(((o.status==='pronto'?o.timer.fim:Date.now())-o.timer.start)/o.timer.dur*100)):0;
+    const atrasado=o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000;
+    return `<div class="os" style="${atrasado?'border-color:#c9a227':''}">
+      <div class="top"><div><div class="cd">${o.cd} · ${o.hora}</div><div class="cl">${esc(o.nome)} · ${esc(o.modelo)}</div></div>
+      <span class="badge ${o.status==='pronto'?'b-pronto':'b-prog'}">${o.status==='pronto'?'✅ Pronto':'🧽 '+p+'%'}</span></div>
+      ${o.status==='pronto'&&atrasado?'<div class="hint" style="color:#9a7d0a">⏰ Cliente ainda não buscou — '+Math.round((Date.now()-o.timer.fim)/60000)+' min</div>':''}
+      ${o.status==='andamento'?`<div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn p" style="padding:8px;font-size:13px" onclick="chamarCliente('${o.cd}')">✅ Concluído</button>
+        <button class="btn s" style="padding:8px;font-size:13px" onclick="reajustar('${o.cd}')">⏱️ +15min</button></div>`:''}
+    </div>`;
+  }).join('');
+}
+/* --- financeiro --- */
+document.getElementById('t-fin').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-f]');if(!b)return;
+  document.querySelectorAll('#t-fin .tabs2 button').forEach(x=>x.classList.toggle('on',x===b));
+  ['rec','desp','pend'].forEach(t=>document.getElementById('f-'+t).classList.toggle('hidden',t!==b.dataset.f));
+});
+function receber(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  o.status='pago';o.pago=true;o.pagoEm=Date.now();
+  DB.pay.push({id:Date.now(),data:hoje(),cd:o.cd,cliente:o.nome,svc:o.svcNome,metodo:o.pag,valor:o.preco,custo:Math.round(o.preco*0.25*100)/100,lucro:o.preco-Math.round(o.preco*0.25*100)/100});
+  save();renderAgenda();renderAtivos();renderFin();toast('Recebido '+brl(o.preco)+' — '+o.pag+' 💰');
+}
+function renderFin(){
+  const mes=hoje().slice(0,7);
+  const rec=DB.pay.filter(p=>p.data.startsWith(mes));
+  const desp=DB.desp.filter(d=>d.data.startsWith(mes));
+  const totR=rec.reduce((s,p)=>s+p.valor,0);
+  const totD=desp.reduce((s,d)=>s+d.val,0);
+  const pendTot=DB.orders.filter(o=>['agendado','andamento','pronto'].includes(o.status)).reduce((s,o)=>s+o.preco,0);
+  const pPix=rec.filter(p=>p.metodo==='pix').reduce((s,p)=>s+p.valor,0);
+  const pDin=rec.filter(p=>p.metodo==='dinheiro').reduce((s,p)=>s+p.valor,0);
+  const pCar=rec.filter(p=>p.metodo==='cartao').reduce((s,p)=>s+p.valor,0);
+  const lav=rec.length;
+  const tk=lav?totR/lav:0;
+  const meta=+DB.cfg.meta||0;
+  const pct=meta?Math.min(100,Math.round(totR/meta*100)):0;
+  document.getElementById('metaBox').innerHTML=`
+    <div class="mbar"><div class="mfill" style="width:${pct}%">${pct}%</div></div>
+    <div class="hint">${meta?(totR>=meta?'🎉 <b style="color:#2e7d32">META BATIDA!</b> '+brl(totR-meta)+' acima da meta de '+brl(meta):'Faltam <b>'+brl(meta-totR)+'</b> para bater a meta de '+brl(meta)+' · '+pct+'% alcançado'):'Defina a meta abaixo.'}</div>`;
+  const cm=document.getElementById('cMeta');if(cm&&!cm.value)cm.value=meta||'';
+  document.getElementById('kpiFin').innerHTML=`
+    <div class="kpi"><div class="l">Receita do mês</div><div class="v ok">${brl(totR)}</div></div>
+    <div class="kpi"><div class="l">Despesas do mês</div><div class="v" style="color:#b3402e">${brl(totD)}</div></div>
+    <div class="kpi"><div class="l">Resultado</div><div class="v ${totR-totD>=0?'ok':'am'}">${brl(totR-totD)}</div></div>
+    <div class="kpi"><div class="l">A receber (pendentes)</div><div class="v am">${brl(pendTot)}</div></div>
+    <div class="kpi"><div class="l">Lavagens pagas</div><div class="v bl">${lav}</div></div>
+    <div class="kpi"><div class="l">Ticket médio</div><div class="v">${brl(tk)}</div></div>
+    <div class="kpi"><div class="l">PIX / Dinheiro / Cartão</div><div class="v" style="font-size:15px">${brl(pPix)} / ${brl(pDin)} / ${brl(pCar)}</div></div>
+    <div class="kpi"><div class="l">Custo estimado (25%)</div><div class="v" style="color:#b3402e">${brl(rec.reduce((s,p)=>s+p.custo,0))}</div></div>`;
+  const rl=document.getElementById('recList');
+  const recHoje=DB.pay.filter(p=>p.data===hoje());
+  rl.innerHTML=`<div class="hint">Hoje: <b>${brl(recHoje.reduce((s,p)=>s+p.valor,0))}</b> em ${recHoje.length} lavagem(ns).</div><div class="hr"></div>`+
+    (rec.length?`<table><tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Forma</th><th class="r">Valor</th></tr>`+
+    rec.slice().sort((a,b)=>b.id-a.id).map(p=>`<tr><td>${fmtBR(p.data)}</td><td>${esc(p.cliente)}</td><td>${esc(p.svc)}</td><td>${p.metodo}</td><td class="r ok">${brl(p.valor)}</td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma receita este mês.</div>');
+  const dl=document.getElementById('despList');
+  dl.innerHTML=desp.length?`<table><tr><th>Data</th><th>Descrição</th><th class="r">Valor</th><th></th></tr>`+
+    desp.slice().sort((a,b)=>b.id-a.id).map(d=>`<tr><td>${fmtBR(d.data)}</td><td>${esc(d.desc)}</td><td class="r" style="color:#b3402e">${brl(d.val)}</td><td class="r"><button class="btn s" style="padding:4px 9px;font-size:11.5px" onclick="delDesp(${d.id})">🗑</button></td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma despesa lançada.</div>';
+  const pl=document.getElementById('pendList');
+  const pendList=DB.orders.filter(o=>['agendado','andamento','pronto'].includes(o.status));
+  pl.innerHTML=pendList.length?`<table><tr><th>Código</th><th>Cliente</th><th>Serviço</th><th>Quando</th><th class="r">Valor</th></tr>`+
+    pendList.map(o=>`<tr><td>${o.cd}</td><td>${esc(o.nome)}</td><td>${esc(o.svcNome)}</td><td>${fmtBR(o.data)} ${o.hora}</td><td class="r am">${brl(o.preco)}</td></tr>`).join('')+'</table>':'<div class="empty">Nada pendente. 👍</div>';
+}
+function addDesp(){
+  const val=parseFloat(document.getElementById('dVal').value);
+  const desc=document.getElementById('dDesc').value.trim();
+  const data=document.getElementById('dData').value||hoje();
+  if(!val||!desc)return toast('Preencha valor e descrição',1);
+  DB.desp.push({id:Date.now(),data,desc,val});save();
+  document.getElementById('dVal').value='';document.getElementById('dDesc').value='';
+  renderFin();toast('Despesa lançada');
+}
+function delDesp(id){DB.desp=DB.desp.filter(d=>d.id!==id);save();renderFin();toast('Despesa removida');}
+function salvarMeta(){
+  const v=+document.getElementById('cMeta').value||0;
+  DB.cfg.meta=v;save();renderFin();toast(v?'Meta salva: '+brl(v):'Meta removida');
+}
+function fechamentoMes(){
+  const mes=hoje().slice(0,7);
+  const rec=DB.pay.filter(p=>p.data.startsWith(mes));
+  const desp=DB.desp.filter(d=>d.data.startsWith(mes));
+  const totR=rec.reduce((s,p)=>s+p.valor,0),totD=desp.reduce((s,d)=>s+d.val,0);
+  const meta=+DB.cfg.meta||0;
+  const pPix=rec.filter(p=>p.metodo==='pix').reduce((s,p)=>s+p.valor,0);
+  const pDin=rec.filter(p=>p.metodo==='dinheiro').reduce((s,p)=>s+p.valor,0);
+  const pCar=rec.filter(p=>p.metodo==='cartao').reduce((s,p)=>s+p.valor,0);
+  const porSvc={};rec.forEach(p=>{porSvc[p.svc]=(porSvc[p.svc]||0)+1});
+  const lav=rec.length,tk=lav?totR/lav:0;
+  const mm=+mes.slice(5,7),ano=mes.slice(0,4);
+  const nomeMes=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'][mm-1];
+  let h='<h2 style="margin:0 0 2px">'+esc(DB.cfg.nome)+' — Fechamento '+nomeMes+'/'+ano+'</h2>';
+  h+='<p style="color:#666;margin:0 0 14px">Emitido em '+new Date().toLocaleString('pt-BR')+' · Gestor: '+esc(gestorAtual||DB.cfg.gestorNome||'André')+'</p>';
+  h+='<table border="1" cellpadding="8" style="width:100%;border-collapse:collapse;font-size:14px">';
+  h+='<tr><td>Meta do mês</td><td align="right">'+(meta?brl(meta):'—')+'</td></tr>';
+  h+='<tr><td>Receita total</td><td align="right"><b>'+brl(totR)+'</b></td></tr>';
+  h+='<tr><td>Despesas totais</td><td align="right">'+brl(totD)+'</td></tr>';
+  h+='<tr><td><b>RESULTADO</b></td><td align="right"><b>'+brl(totR-totD)+'</b></td></tr>';
+  h+='<tr><td>Meta</td><td align="right">'+(meta?(totR>=meta?'✅ BATIDA ('+brl(totR-meta)+' acima)':'❌ Não batida — faltou '+brl(meta-totR)):'—')+'</td></tr>';
+  h+='<tr><td>Lavagens pagas</td><td align="right">'+lav+'</td></tr>';
+  h+='<tr><td>Ticket médio</td><td align="right">'+brl(tk)+'</td></tr>';
+  h+='<tr><td>PIX / Dinheiro / Cartão</td><td align="right">'+brl(pPix)+' / '+brl(pDin)+' / '+brl(pCar)+'</td></tr>';
+  h+='</table>';
+  if(Object.keys(porSvc).length){h+='<h3 style="margin:16px 0 6px">Lavagens por serviço</h3><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse;font-size:14px">';
+    Object.entries(porSvc).forEach(([s,q])=>{h+='<tr><td>'+esc(s)+'</td><td align="right">'+q+'</td></tr>'});h+='</table>';}
+  if(rec.length){h+='<h3 style="margin:16px 0 6px">Receitas do mês</h3><table border="1" cellpadding="6" style="width:100%;border-collapse:collapse;font-size:12.5px"><tr><th align="left">Data</th><th align="left">Cliente</th><th align="left">Serviço</th><th align="left">Forma</th><th align="right">Valor</th></tr>';
+    rec.slice().sort((a,b)=>b.id-a.id).forEach(p=>{h+='<tr><td>'+fmtBR(p.data)+'</td><td>'+esc(p.cliente)+'</td><td>'+esc(p.svc)+'</td><td>'+p.metodo+'</td><td align="right">'+brl(p.valor)+'</td></tr>'});h+='</table>';}
+  if(desp.length){h+='<h3 style="margin:16px 0 6px">Despesas do mês</h3><table border="1" cellpadding="6" style="width:100%;border-collapse:collapse;font-size:12.5px"><tr><th align="left">Data</th><th align="left">Descrição</th><th align="right">Valor</th></tr>';
+    desp.slice().sort((a,b)=>b.id-a.id).forEach(d=>{h+='<tr><td>'+fmtBR(d.data)+'</td><td>'+esc(d.desc)+'</td><td align="right">'+brl(d.val)+'</td></tr>'});h+='</table>';}
+  const w=window.open('','_blank');
+  if(!w)return toast('Permita pop-ups para gerar o fechamento',1);
+  w.document.write('<html><head><title>Fechamento '+nomeMes+'/'+ano+' — '+esc(DB.cfg.nome)+'</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:26px;color:#222}table{margin:8px 0}th{background:#efeaff}h3{margin:14px 0 4px}@media print{button{display:none}}</style></head><body>'+h+'<br><button onclick="window.print()" style="padding:12px 20px;font-size:15px;font-weight:800;cursor:pointer">🖨 Imprimir / Salvar PDF</button></body></html>');
+  w.document.close();
+}
+/* --- config --- */
+function loadCfgForm(){
+  const c=DB.cfg;
+  document.getElementById('cAbre').value=c.abre;document.getElementById('cFecha').value=c.fecha;
+  document.getElementById('cInt').value=c.int;document.getElementById('cVagas').value=c.vagas;
+  document.getElementById('cAlmI').value=c.almocoI;document.getElementById('cAlmF').value=c.almocoF;
+  document.getElementById('cPix').value=c.pix;document.getElementById('cWapp').value=c.wapp;
+  document.getElementById('cPinA').value=(DB.cfg.pins||['1234'])[0];document.getElementById('cPinL').value=(DB.cfg.pins||['1234','4321'])[1]||'4321';
+  const cN=document.getElementById('cNome'),cG=document.getElementById('cGestor');
+  if(cN)cN.value=c.nome;
+  if(cG)cG.value=c.gestorNome||'André';
+  const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
+  renderCfgSvc();
+}
+function renderCfgSvc(t){
+  const __el=document.getElementById(t||'cfgSvc');if(!__el)return;
+  __el.innerHTML=DB.svc.map((s,i)=>`
+    <div style="background:#f7f3fd;border:1px solid #e2d9f2;border-radius:14px;padding:14px;margin-bottom:12px">
+      <label>Serviço ${i+1}</label>
+      <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
+      <label style="margin-top:8px">Descrição</label>
+      <textarea rows="2" onchange="DB.svc[${i}].desc=this.value;save();renderSvcs()">${esc(s.desc)}</textarea>
+      <div class="row" style="margin-top:8px">
+        <div><label>Preço R$</label><input type="number" step="0.01" value="${s.preco}" onchange="DB.svc[${i}].preco=+this.value;save();renderSvcs()"></div>
+        <div><label>Duração (min)</label><input type="number" step="10" value="${s.dur}" onchange="DB.svc[${i}].dur=+this.value;save();renderSvcs()"></div>
+      </div>
+      <button class="btn d" style="padding:7px;font-size:12.5px;margin-top:8px" onclick="delSvc(${i})">🗑 Excluir serviço</button>
+    </div>`).join('');
+}
+function addSvc(){
+  DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:140});
+  save();renderCfgSvc();renderValores();toast('Serviço adicionado — edite nome, preço e duração');
+}
+function renderValores(){renderCfgSvc('valoresSvc');}
+function delSvc(i){
+  if(DB.svc.length<=1)return toast('Precisa ter pelo menos 1 serviço',1);
+  if(!confirm('Excluir este serviço?'))return;
+  DB.svc.splice(i,1);save();renderCfgSvc();renderValores();renderSvcs();
+}
+function tglDia(i){
+  const f=DB.cfg.fechados||[];
+  if(f.includes(i))DB.cfg.fechados=f.filter(x=>x!==i);else DB.cfg.fechados=[...f,i];
+  save();loadCfgForm();
+}
+function saveCfg(){
+  const c=DB.cfg;
+  c.abre=document.getElementById('cAbre').value||'08:00';
+  c.fecha=document.getElementById('cFecha').value||'17:00';
+  c.int=+document.getElementById('cInt').value||140;
+  c.vagas=+document.getElementById('cVagas').value||1;
+  c.almocoI=document.getElementById('cAlmI').value||'';
+  c.almocoF=document.getElementById('cAlmF').value||'';
+  c.pix=document.getElementById('cPix').value;
+  c.wapp=document.getElementById('cWapp').value.replace(/\D/g,'');
+  const cN2=document.getElementById('cNome'),cG2=document.getElementById('cGestor');
+  c.nome=(cN2&&cN2.value)||c.nome;
+  c.gestorNome=(cG2&&cG2.value)||c.gestorNome||'André';
+  save();renderSvcs();renderDays();renderSlots();renderGestor();toast('Configurações salvas ✅');
+}
+function backup(){
+  const a=document.createElement('a');
+  a.href='data:application/json,'+encodeURIComponent(JSON.stringify(DB));
+  a.download='backup-afcarwash-'+hoje()+'.json';a.click();toast('Backup baixado');
+}
+function restore(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cfg)throw 0;DB=d;save();toast('Backup restaurado');location.reload();}catch(e){toast('Arquivo inválido',1);}};
+  r.readAsText(f);
+}
+/* --- inputs cfg extras --- */
+function addCfgInputs(){
+  const box=document.querySelector('#t-cfg .card');
+  const div=document.createElement('div');
+  div.innerHTML=`<div class="card"><h3>🏪 Nome, logo e gestor</h3>
+    <label>Nome da empresa</label><input id="cNome">
+    <label style="margin-top:8px">Nome do gestor</label><input id="cGestor" placeholder="André">
+    <label style="margin-top:8px">Logo (foto — opcional)</label>
+    <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
+    <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
+    <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
+    <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
+    <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
+    <div class="hint">Sem envios, o app usa o símbolo A.F e a foto padrão de carro lavando.</div></div>`;
+  box.parentNode.insertBefore(div.firstChild,box);
+}
+document.addEventListener('change',e=>{
+  const f=e.target;
+  if((f.id==='cLogo'||f.id==='cRosto'||f.id==='cHero')&&f.files[0]){
+    const r=new FileReader();
+    r.onload=()=>{
+      if(f.id==='cLogo'){DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');}
+      else if(f.id==='cRosto'){DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+      else{DB.cfg.hero=r.result;save();const hi=document.getElementById('heroImg');hi.src=r.result;toast('Fundo atualizado ✅');}
+    };
+    r.readAsDataURL(f.files[0]);
+  }
+});
+/* ============ ACESSO GESTOR (5 toques no logo) ============ */
+let taps=0,tapTimer=null;
+document.getElementById('hLogo').addEventListener('click',()=>{
+  if(gestor){document.querySelector('#nav [data-pg=gestor]').click();return;}
+  taps++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>taps=0,2500);
+  if(taps===3)toast('🔐 Área do gestor: toque mais 2x');
+  if(taps>=5){taps=0;abrirLoginGestor();}
+});
+function abrirLoginGestor(){
+  document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)fecharModalGestor()">
+    <div class="box" style="text-align:center">
+      <div style="font-size:40px">🔐</div>
+      <h3 style="justify-content:center;margin:8px 0">Acesso do Gestor</h3>
+      <div class="hint" style="margin-bottom:12px">Área exclusiva do André — agenda, financeiro e valores.</div>
+      <input type="password" id="pinModal" placeholder="PIN de acesso" inputmode="numeric" style="text-align:center;font-size:20px;letter-spacing:8px" maxlength="6">
+      <button class="btn p" style="margin-top:12px" onclick="loginModal()">Entrar</button>
+      <button class="btn s" style="margin-top:8px" onclick="fecharModalGestor()">Cancelar</button>
+      <div class="hint" id="pinModalHint"></div>
+    </div></div>`;
+  setTimeout(()=>document.getElementById('pinModal').focus(),100);
+}
+function loginModal(){
+  const v=document.getElementById('pinModal').value;
+  const whoM=chkPin(v);if(whoM){gestorAtual=whoM;fecharModalGestor();document.getElementById('pin').value=v;login();}
+  else{document.getElementById('pinModalHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
+}
+function fecharModalGestor(){document.getElementById('modalRoot').innerHTML='';}
+function sairGestor(){
+  gestor=false;gestorAtual=null;sessionStorage.removeItem('lj_gestor');
+  document.getElementById('gestorPanel').classList.add('hidden');
+  document.getElementById('gestorLock').classList.remove('hidden');
+  document.getElementById('navGestor').classList.add('hidden');
+  document.getElementById('pin').value='';
+  go('home');
+  toast('Modo cliente 👋');
+}
+/* ============ TICKER ============ */
+setInterval(()=>{
+  if(!DB||document.hidden)return;
+  let mudou=false;
+  DB.orders.forEach(o=>{
+    if(o.status==='andamento'&&o.timer&&Date.now()>=o.timer.start+o.timer.dur){
+      o.status='pronto';o.timer.fim=o.timer.start+o.timer.dur;mudou=true;
+      if('vibrate'in navigator)navigator.vibrate([200,100,200]);
+    }
+  });
+  if(mudou){save();renderAgenda();renderAtivos();}
+  if(!document.getElementById('pg-meus').classList.contains('hidden')&&meuFone)meusBuscar();
+  if(!document.getElementById('pg-agendar').classList.contains('hidden')&&sel.data){renderSlots();renderDays();}
+},15000);
+setInterval(()=>{
+  if(document.hidden)return;
+  document.querySelectorAll('.prog .fill').forEach(f=>{
+    const w=+f.style.width.replace('%','');if(w>0&&w<100)f.style.width=Math.min(100,w+0.5)+'%';
+  });
+},3000);
+
+/* ============ INIT ============ */
+load();
+addCfgInputs();
+renderSvcs();renderPay();renderDays();renderSlots();resumo();
+renderHomeSvc();liveHome();
+sel.data=hoje();
+go('home');
+setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
+if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
+</script>
+</body>
+</html>
