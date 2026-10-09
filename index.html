@@ -484,10 +484,10 @@ const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-m8t3v7r2';
 let noPub=false,pubTimer=null;
 const topDB=()=>(DB.cfg.topico||TOP_PADRAO)+'-db';
 const topNot=()=>(DB.cfg.topico||TOP_PADRAO);
-function agendarPub(){if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
+function agendarPub(){if(Date.now()<(window.__pullGuard||0))return;if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
 async function pubDB(){
   try{
-    const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}};
+    const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
     DB.cloudT=blob.t;noPub=true;save();noPub=false;
     await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
   }catch(e){}
@@ -515,8 +515,8 @@ function mergeBlob(b){
     un(b.orders,'orders');un(b.pay,'pay');un(b.desp,'desp');
     DB.seq=Math.max(DB.seq||1,b.seq||1);
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
-    Object.assign(DB.cfg,b.cfg||{},keep);
-    DB.cloudT=b.t;DB.cloudAt=Date.now();save();
+    if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
+    DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();
     if(gestor){renderGestor();toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
   }finally{noPub=false}
 }
@@ -1281,7 +1281,7 @@ setInterval(()=>{
     }
   });
   if(mudou){save();renderAgenda();renderAtivos();}
-  if(!document.getElementById('pg-meus').classList.contains('hidden')&&meuFone)meusBuscar();
+  if(!document.getElementById('pg-meus').classList.contains('hidden')&&meuFone){meusBuscar();pullDB();}
   if(!document.getElementById('pg-agendar').classList.contains('hidden')&&sel.data){renderSlots();renderDays();}
 },15000);
 setInterval(()=>{
