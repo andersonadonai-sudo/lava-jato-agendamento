@@ -261,7 +261,7 @@ td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
         <h3>💵 Valores das lavagens</h3>
         <div class="hint" style="margin:0 0 12px">Altere nome, preço e duração — o cliente vê na hora. Salva sozinho.</div>
         <div id="valoresSvc"></div>
-        <button class="btn s" onclick="addSvc()">➕ Adicionar serviço</button>
+        <button class="btn s" onclick="addSvc();renderValores()">➕ Adicionar serviço</button>
       </div>
     </div>
 
@@ -334,7 +334,7 @@ const fone=()=>localStorage.getItem('lj_fone')||'';
 function seed(){
   return {
     cfg:{
-      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André',
+      nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'', rosto:'', gestorNome:'André', hero:'',
       abre:'08:00', fecha:'17:00', int:140, vagas:1,
       almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
@@ -348,7 +348,7 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined)DB.cfg.hero='';if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -579,7 +579,7 @@ function login(){
 function renderGestor(){
   document.getElementById('gData').value=sel.data||hoje();
   const gp=document.getElementById('gPerfil');
-  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div><div class="gn">'+esc(DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div>';
+  gp.innerHTML=(DB.cfg.rosto?'<img src="'+DB.cfg.rosto+'">':'<div class="fz">👨‍💼</div>')+'<div style="flex:1"><div class="gn">'+esc(DB.cfg.gestorNome||'André')+'</div><div class="gr">Gestor · '+esc(DB.cfg.nome)+'</div></div><button class="btn s" style="width:auto;padding:8px 14px;font-size:12.5px" onclick="sairGestor()">Sair</button>';
   renderAgenda();renderAtivos();renderFin();loadCfgForm();
 }
 /* --- agenda --- */
@@ -755,7 +755,7 @@ function renderValores(){renderCfgSvc('valoresSvc');}
 function delSvc(i){
   if(DB.svc.length<=1)return toast('Precisa ter pelo menos 1 serviço',1);
   if(!confirm('Excluir este serviço?'))return;
-  DB.svc.splice(i,1);save();renderCfgSvc('cfgSvc');renderValores();renderSvcs();
+  DB.svc.splice(i,1);save();renderCfgSvc();renderValores();renderSvcs();
 }
 function tglDia(i){
   const f=DB.cfg.fechados||[];
@@ -804,16 +804,19 @@ function addCfgInputs(){
     <input type="file" id="cLogo" accept="image/*" style="padding:8px;font-size:12px">
     <label style="margin-top:8px">Foto do gestor (rosto — aparece no painel)</label>
     <input type="file" id="cRosto" accept="image/*" style="padding:8px;font-size:12px">
-    <div class="hint">Sem logo/foto enviados, o app usa o símbolo A.F embutido.</div></div>`;
+    <label style="margin-top:8px">Fundo do topo (foto de carro lavando — opcional)</label>
+    <input type="file" id="cHero" accept="image/*" style="padding:8px;font-size:12px">
+    <div class="hint">Sem envios, o app usa o símbolo A.F e o fundo padrão embutido.</div></div>`;
   box.parentNode.insertBefore(div.firstChild,box);
 }
 document.addEventListener('change',e=>{
   const f=e.target;
-  if((f.id==='cLogo'||f.id==='cRosto')&&f.files[0]){
+  if((f.id==='cLogo'||f.id==='cRosto'||f.id==='cHero')&&f.files[0]){
     const r=new FileReader();
     r.onload=()=>{
       if(f.id==='cLogo'){DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');}
-      else{DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+      else if(f.id==='cRosto'){DB.cfg.rosto=r.result;save();renderGestor();toast('Foto do gestor atualizada ✅');}
+      else{DB.cfg.hero=r.result;save();const hi=document.getElementById('heroImg');hi.src=r.result;toast('Fundo atualizado ✅');}
     };
     r.readAsDataURL(f.files[0]);
   }
@@ -841,7 +844,7 @@ function abrirLoginGestor(){
 }
 function loginModal(){
   const v=document.getElementById('pinModal').value;
-  if(v===DB.cfg.pin){fecharModalGestor();document.getElementById('pin').value=v;login();}
+  if(v===DB.cfg.pin){fecharModalGestor();document.getElementById('pin').value=v;login();document.querySelector('#nav [data-pg=gestor]').click();}
   else{document.getElementById('pinModalHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function fecharModalGestor(){document.getElementById('modalRoot').innerHTML='';}
@@ -851,10 +854,7 @@ function sairGestor(){
   document.getElementById('gestorLock').classList.remove('hidden');
   document.getElementById('navGestor').classList.add('hidden');
   document.getElementById('pin').value='';
-  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.pg==='agendar'));
-  ['gestor','meus'].forEach(p=>document.getElementById('pg-'+p).classList.add('hidden'));
-  const pg=document.getElementById('pg-agendar');pg.classList.remove('hidden');pg.classList.remove('pager');void pg.offsetWidth;pg.classList.add('pager');
-  window.scrollTo(0,0);
+  document.querySelector('#nav [data-pg=agendar]').click();
   toast('Modo cliente 👋');
 }
 /* ============ TICKER ============ */
