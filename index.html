@@ -304,20 +304,20 @@ function seed(){
   return {
     cfg:{
       nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'',
-      abre:'07:00', fecha:'18:00', int:140, vagas:1,
+      abre:'08:00', fecha:'17:00', int:140, vagas:1,
       almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
       pin:'1234'
     },
     svc:[
-      {id:'conv', nome:'Lavagem Convencional', desc:'Lavagem externa completa: carroceria, rodas, vidros e interior aspirado. O básico bem feito.', preco:40, dur:120},
-      {id:'det', nome:'Lavagem Detalhada', desc:'Lavagem premium: desengraxamento, cera, hidratação de plásticos e pneus, interior caprichado.', preco:70, dur:150},
+      {id:'conv', nome:'Lavagem Convencional', desc:'Lavagem externa completa: carroceria, rodas, vidros e interior aspirado. O básico bem feito.', preco:60, dur:120},
+      {id:'det', nome:'Lavagem com Cera Protetora', desc:'Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.', preco:80, dur:150},
       {id:'hig', nome:'Higienização', desc:'Higienização interna completa: limpeza profunda de bancos, carpete, teto e ar-condicionado. Mata bactérias e odores.', preco:120, dur:150}
     ],
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;save();}if(DB.cfg.logo===undefined)DB.cfg.logo='';}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -719,8 +719,8 @@ function tglDia(i){
 }
 function saveCfg(){
   const c=DB.cfg;
-  c.abre=document.getElementById('cAbre').value||'07:00';
-  c.fecha=document.getElementById('cFecha').value||'18:00';
+  c.abre=document.getElementById('cAbre').value||'08:00';
+  c.fecha=document.getElementById('cFecha').value||'17:00';
   c.int=+document.getElementById('cInt').value||140;
   c.vagas=+document.getElementById('cVagas').value||1;
   c.almocoI=document.getElementById('cAlmI').value||'';
