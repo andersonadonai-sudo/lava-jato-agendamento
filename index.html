@@ -51,11 +51,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7c3aed}
 .slot.sel{background:#f1e9fd;border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
 .btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
 .btn:active{transform:scale(.98)}
-.btn.p{background:#a855f7;color:#fff;box-shadow:0 3px 12px rgba(168,85,247,.35)}
-.btn.g{background:#2e7d32;color:#fff}
+.btn.p{background:linear-gradient(135deg,#8b3ff0,#a855f7);color:#fff;box-shadow:0 3px 12px rgba(168,85,247,.35)}
+.btn.g{background:linear-gradient(135deg,#2e7d32,#43a047);color:#fff;box-shadow:0 3px 10px rgba(46,125,50,.3)}
 .btn.d{background:#b3402e;color:#fff}
 .btn.s{background:#fff;color:#1a1226;border:2px solid #1a1226}
-.btn.bl{background:#1565c0;color:#fff}
+.btn.bl{background:linear-gradient(135deg,#0d5cad,#1976d2);color:#fff;box-shadow:0 3px 10px rgba(21,101,192,.3)}
 .pager{animation:fadein .25s ease}
 @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .os{background:#fff;border:1px solid #e2d9f2;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(43,33,64,.05);content-visibility:auto;contain-intrinsic-size:90px}
@@ -147,6 +147,13 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
 .ic svg{width:23px;height:23px;display:block}
 .ic{display:flex;align-items:center;justify-content:center}
 .novos{color:#c9a227;font-weight:800}
+.tabs2{display:flex;gap:8px;background:#fff;border:1px solid #e2d9f2;border-radius:16px;padding:8px;margin-bottom:16px;overflow-x:auto;box-shadow:0 2px 10px rgba(43,33,64,.06)}
+.tabs2 button{flex:1;min-width:96px;background:#f7f3fd;border:2px solid transparent;border-radius:12px;padding:11px 8px;font-size:13.5px;font-weight:800;color:#6b5f85;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+.tabs2 button.on{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 3px 10px rgba(124,58,237,.35)}
+.tabs2 button:active{transform:scale(.96)}
+.lockbtn{margin-left:auto;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:12px;padding:8px 12px;font-size:17px;cursor:pointer;font-family:inherit;flex-shrink:0;transition:.15s}
+.lockbtn:active{transform:scale(.92)}
+.lockbtn.aberto{background:#a855f7;border-color:#c9a0ff}
 </style>
 </head>
 <body>
@@ -157,6 +164,7 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
     <h1 id="hNome">Lava Jato</h1>
     <div class="sub" id="hSub">Agende sua lavagem pelo celular</div>
   </div>
+  <button class="lockbtn" id="btnGestor" onclick="tocarGestor()" title="Área do gestor">🔒</button>
 </header>
 
 <nav id="nav">
@@ -189,7 +197,7 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
     <div id="homeSvc"></div>
   </div>
   <div class="hint center">🕐 Atendimento: <b id="homeHorario"></b> · 1 carro por horário</div>
-  <div class="hint center" style="opacity:.6;font-size:12px;margin-top:4px">🔐 Gestor da loja? Toque 5x no logo para entrar</div>
+  <div class="hint center" style="opacity:.6;font-size:12px;margin-top:4px">🔐 Gestor da loja? Use o cadeado 🔒 no topo (ou toque 5x no logo)</div>
   <div class="hint center" style="opacity:.45;font-size:11px;margin-top:2px" id="verBadgeHome"></div>
 </div>
 
@@ -437,7 +445,7 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
         <label style="margin-top:8px">PIN da Lysa</label>
         <input type="password" id="cPinL" inputmode="numeric" maxlength="6" style="text-align:center;letter-spacing:6px">
         <button class="btn p" style="margin-top:10px" onclick="salvarPins()">Salvar acessos</button>
-        <div class="hint">PINs iniciais: André <b>1234</b> · Lysa <b>4321</b>. O cliente NÃO vê esta área — acesso pelo toque 5x no logo.</div>
+        <div class="hint">PINs iniciais: André <b>1234</b> · Lysa <b>4321</b>. O cliente NÃO vê esta área — acesso pelo cadeado 🔒 no topo da tela.</div>
         <div class="hr"></div>
         <button class="btn s" onclick="backup()">⬇️ Backup (baixar dados)</button>
         <button class="btn s" style="margin-top:8px" onclick="document.getElementById('impFile').click()">⬆️ Restaurar backup</button>
@@ -783,6 +791,7 @@ function login(){
   }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
+  const lb=document.getElementById('btnGestor');if(lb){lb.textContent='🔓';lb.classList.add('aberto');}
   const novos=(DB.orders||[]).filter(o=>o.criado>(DB.lastSeen||0)&&o.status!=='cancelado').length;
   DB.lastSeen=Date.now();save();
   document.getElementById('gData').value=sel.data||hoje();
@@ -1168,6 +1177,10 @@ document.getElementById('hLogo').addEventListener('click',()=>{
   if(taps===3)toast('🔐 Área do gestor: toque mais 2x');
   if(taps>=5){taps=0;abrirLoginGestor();}
 });
+function tocarGestor(){
+  if(gestor){go('gestor');return;}
+  abrirLoginGestor();
+}
 function abrirLoginGestor(){
   document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)fecharModalGestor()">
     <div class="box" style="text-align:center">
@@ -1189,6 +1202,7 @@ function loginModal(){
 function fecharModalGestor(){document.getElementById('modalRoot').innerHTML='';}
 function sairGestor(){
   gestor=false;gestorAtual=null;sessionStorage.removeItem('lj_gestor');
+  const lb2=document.getElementById('btnGestor');if(lb2){lb2.textContent='🔒';lb2.classList.remove('aberto');}
   document.getElementById('gestorPanel').classList.add('hidden');
   document.getElementById('gestorLock').classList.remove('hidden');
   document.getElementById('navGestor').classList.add('hidden');
@@ -1218,7 +1232,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v13 · 10/10 19h30 · Visão geral + Caixa do dia';
+const VERSAO='v14 · 10/10 19h40 · Visão geral + Caixa + acesso pelo cadeado 🔒';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1232,7 +1246,7 @@ renderHomeSvc();liveHome();mostraVersao();
 sel.data=hoje();
 go('home');
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
-if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
+if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';const lb3=document.getElementById('btnGestor');if(lb3){lb3.textContent='🔓';lb3.classList.add('aberto');}document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
 </script>
 </body>
 </html>
