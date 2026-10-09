@@ -6,101 +6,95 @@
 <title>Lava Jato — Agendamento</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#0f1420;color:#e8ecf4;min-height:100vh;padding-bottom:90px}
-header{background:linear-gradient(135deg,#0b3d91,#1273de);padding:18px 16px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.4)}
-header .logo{width:44px;height:44px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-header h1{font-size:17px;font-weight:800;letter-spacing:.3px}
-header .sub{font-size:11px;opacity:.85;margin-top:2px}
-nav{position:fixed;bottom:0;left:0;right:0;background:#161d2e;display:flex;border-top:1px solid #232c42;z-index:60;padding-bottom:env(safe-area-inset-bottom)}
-nav button{flex:1;background:none;border:none;color:#8b96ad;padding:10px 4px 12px;font-size:10.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
-nav button span.ic{font-size:19px}
-nav button.on{color:#4da3ff}
-main{max-width:640px;margin:0 auto;padding:16px 14px}
-.card{background:#1a2236;border:1px solid #26304a;border-radius:16px;padding:16px;margin-bottom:14px}
-.card h3{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.svc{display:flex;justify-content:space-between;align-items:center;background:#212b44;border:1.5px solid #2c3860;border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer;transition:.15s}
+body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#f6f2ec;color:#3e2f23;font-size:16px;min-height:100vh;padding-bottom:100px}
+header{background:linear-gradient(135deg,#4a3423,#6d4c2f);padding:20px 16px 16px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;box-shadow:0 3px 14px rgba(62,47,35,.35)}
+header .logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden}
+header h1{font-size:20px;font-weight:800;letter-spacing:.3px;color:#fff}
+header .sub{font-size:13px;opacity:.9;margin-top:3px;color:#f0e6d8}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #e2d8c8;z-index:60;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(62,47,35,.08)}
+nav button{flex:1;background:none;border:none;color:#a08f7c;padding:11px 4px 13px;font-size:12.5px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+nav button span.ic{font-size:23px}
+nav button.on{color:#6d4c2f}
+main{max-width:680px;margin:0 auto;padding:18px 16px}
+.card{background:#fff;border:1px solid #e6dccc;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(62,47,35,.06)}
+.card h3{font-size:17px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#4a3423}
+.svc{display:flex;justify-content:space-between;align-items:center;background:#faf6ef;border:2px solid #e6dccc;border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:.15s}
 .svc:active{transform:scale(.98)}
-.svc.sel{border-color:#4da3ff;background:#1d2c4d}
-.svc .nm{font-weight:800;font-size:14.5px}
-.svc .ds{font-size:11.5px;color:#9aa6bf;margin-top:3px;line-height:1.45}
-.svc .pr{text-align:right;flex-shrink:0;margin-left:10px}
-.svc .pr b{font-size:15px;color:#4ade80;display:block}
-.svc .pr small{font-size:10px;color:#8b96ad}
-label{display:block;font-size:11.5px;font-weight:700;color:#9aa6bf;margin:12px 0 5px;text-transform:uppercase;letter-spacing:.5px}
-input,select,textarea{width:100%;background:#121928;border:1.5px solid #2c3860;border-radius:10px;padding:11px 12px;color:#e8ecf4;font-size:15px;font-family:inherit}
-input:focus,select:focus{outline:none;border-color:#4da3ff}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
-.slot{background:#212b44;border:1.5px solid #2c3860;border-radius:10px;padding:9px 2px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;color:#cdd6e6}
-.slot.off{opacity:.28;pointer-events:none;text-decoration:line-through}
-.slot.sel{border-color:#4da3ff;background:#1d3a5f;color:#fff}
-.slot.full{border-color:#7f1d1d;color:#f87171;opacity:.5;pointer-events:none}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
+.svc.sel{border-color:#6d4c2f;background:#f3ead9;box-shadow:0 0 0 3px rgba(109,76,47,.12)}
+.svc .nm{font-weight:800;font-size:17px;color:#3e2f23}
+.svc .ds{font-size:14px;color:#7a6a58;margin-top:4px;line-height:1.5}
+.svc .pr{text-align:right;flex-shrink:0;margin-left:12px}
+.svc .pr b{font-size:18px;color:#2e7d32;display:block}
+.svc .pr small{font-size:12px;color:#9c8b78}
+label{display:block;font-size:13px;font-weight:800;color:#7a6a58;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.6px}
+input,select,textarea{width:100%;background:#fff;border:2px solid #ddd2c0;border-radius:12px;padding:13px 14px;color:#3e2f23;font-size:16px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#6d4c2f}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:6px}
+.day{background:#faf6ef;border:2px solid #e6dccc;border-radius:13px;padding:9px 2px;text-align:center;cursor:pointer}
+.day .dw{font-size:11px;color:#9c8b78;font-weight:800;text-transform:uppercase}
+.day .dn{font-size:19px;font-weight:800;margin:3px 0;color:#3e2f23}
+.day .dv{font-size:10px;font-weight:800;border-radius:9px;padding:3px 0}
+.day.livre{border-color:#2e7d32}.day.livre .dv{background:#e5f3e8;color:#2e7d32}
+.day.quase{border-color:#c9a227}.day.quase .dv{background:#faf3d9;color:#9a7d0a}
+.day.cheio{border-color:#b3402e;opacity:.6}.day.cheio .dv{background:#f9e5e1;color:#b3402e}
+.day.fechado{opacity:.4}.day.fechado .dv{color:#9c8b78}
+.day.sel{background:#f3ead9;border-color:#6d4c2f;box-shadow:0 0 0 3px rgba(109,76,47,.15)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.slot{background:#faf6ef;border:2px solid #e6dccc;border-radius:13px;padding:11px 4px;text-align:center;cursor:pointer;color:#3e2f23}
+.slot .st{font-size:17px;font-weight:800}
+.slot .sv{font-size:11px;font-weight:800;margin-top:3px;border-radius:9px;padding:2px 0}
+.slot.off{opacity:.35;pointer-events:none}
+.slot.livre{border-color:#2e7d32}.slot.livre .sv{color:#2e7d32}
+.slot.quase{border-color:#c9a227}.slot.quase .sv{color:#9a7d0a}
+.slot.full{border-color:#b3402e;opacity:.55;pointer-events:none}.slot.full .sv{color:#b3402e}
+.slot.sel{background:#f3ead9;border-color:#6d4c2f;box-shadow:0 0 0 3px rgba(109,76,47,.15)}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
 .btn:active{transform:scale(.98)}
-.btn.p{background:#1273de;color:#fff}
-.btn.g{background:#16a34a;color:#fff}
-.btn.d{background:#dc2626;color:#fff}
-.btn.s{background:#2c3860;color:#cdd6e6}
+.btn.p{background:#6d4c2f;color:#fff}
+.btn.g{background:#2e7d32;color:#fff}
+.btn.d{background:#b3402e;color:#fff}
+.btn.s{background:#efe7da;color:#5a4632}
 .btn:disabled{opacity:.4;pointer-events:none}
-.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
-.pay button{background:#212b44;border:1.5px solid #2c3860;border-radius:10px;padding:11px 4px;color:#cdd6e6;font-size:12px;font-weight:700;cursor:pointer}
-.pay button.sel{border-color:#4da3ff;background:#1d3a5f;color:#fff}
-.tabs2{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
-.tabs2 button{background:#212b44;border:1.5px solid #2c3860;border-radius:20px;padding:7px 14px;color:#9aa6bf;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer}
-.tabs2 button.on{background:#1273de;border-color:#1273de;color:#fff}
-.os{background:#1a2236;border:1px solid #26304a;border-radius:14px;padding:14px;margin-bottom:10px}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.pay button{background:#faf6ef;border:2px solid #e6dccc;border-radius:12px;padding:14px 4px;color:#5a4632;font-size:14px;font-weight:800;cursor:pointer}
+.pay button.sel{border-color:#6d4c2f;background:#f3ead9;color:#3e2f23}
+.tabs2{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.tabs2 button{background:#efe7da;border:2px solid #e6dccc;border-radius:22px;padding:9px 16px;color:#7a6a58;font-size:14px;font-weight:800;white-space:nowrap;cursor:pointer}
+.tabs2 button.on{background:#6d4c2f;border-color:#6d4c2f;color:#fff}
+.os{background:#fff;border:1px solid #e6dccc;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(62,47,35,.05)}
 .os .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.os .cd{font-size:11px;color:#8b96ad;font-weight:700}
-.os .cl{font-weight:800;font-size:14.5px;margin-top:2px}
-.badge{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap}
-.b-agd{background:#1e3a5f;color:#7db8ff}
-.b-prog{background:#3a2c10;color:#fbbf24}
-.b-pronto{background:#103a2a;color:#34d399}
-.b-pago{background:#12351f;color:#4ade80}
-.b-cancel{background:#3a1414;color:#f87171}
-.b-np{background:#3a2c10;color:#fbbf24}
-.prog{background:#121928;border-radius:20px;height:22px;margin-top:12px;overflow:hidden;position:relative;border:1px solid #26304a}
-.prog .fill{height:100%;background:linear-gradient(90deg,#1273de,#4da3ff);border-radius:20px;transition:width 1s linear;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:800;color:#fff;min-width:34px}
-.pct{font-size:12px;color:#9aa6bf;margin-top:6px;text-align:center;font-weight:700}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.kpi{background:#1a2236;border:1px solid #26304a;border-radius:14px;padding:13px}
-.kpi .l{font-size:10.5px;color:#8b96ad;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.kpi .v{font-size:19px;font-weight:800;margin-top:4px}
-.ok{color:#4ade80}.am{color:#fbbf24}.bl{color:#7db8ff}
-.hr{height:1px;background:#26304a;margin:12px 0}
-.pill{display:inline-block;background:#212b44;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;margin:2px 4px 2px 0;color:#cdd6e6}
-.empty{text-align:center;color:#8b96ad;font-size:13px;padding:30px 10px;line-height:1.6}
+.os .cd{font-size:12.5px;color:#9c8b78;font-weight:800}
+.os .cl{font-weight:800;font-size:16.5px;margin-top:3px;color:#3e2f23}
+.badge{padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:800;white-space:nowrap}
+.b-agd{background:#eef3fa;color:#2c5aa0}
+.b-prog{background:#faf3d9;color:#9a7d0a}
+.b-pronto{background:#e5f3e8;color:#2e7d32}
+.b-pago{background:#e5f3e8;color:#2e7d32}
+.b-cancel{background:#f9e5e1;color:#b3402e}
+.prog{background:#efe7da;border-radius:20px;height:24px;margin-top:14px;overflow:hidden;position:relative;border:1px solid #e6dccc}
+.prog .fill{height:100%;background:linear-gradient(90deg,#6d4c2f,#8b653f);border-radius:20px;transition:width 1s linear;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:800;color:#fff;min-width:36px}
+.pct{font-size:13.5px;color:#7a6a58;margin-top:7px;text-align:center;font-weight:800}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+.kpi{background:#faf6ef;border:1px solid #e6dccc;border-radius:16px;padding:15px}
+.kpi .l{font-size:12px;color:#9c8b78;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.kpi .v{font-size:22px;font-weight:800;margin-top:5px;color:#3e2f23}
+.ok{color:#2e7d32}.am{color:#9a7d0a}.bl{color:#2c5aa0}
+.hr{height:1px;background:#e6dccc;margin:14px 0}
+.pill{display:inline-block;background:#efe7da;border-radius:20px;padding:5px 12px;font-size:12.5px;font-weight:800;margin:2px 4px 2px 0;color:#5a4632}
+.empty{text-align:center;color:#9c8b78;font-size:15px;padding:34px 12px;line-height:1.7}
 .hidden{display:none!important}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,.5);animation:tin .3s}
-.toast.err{background:#dc2626}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#2e7d32;color:#fff;padding:13px 22px;border-radius:30px;font-size:15px;font-weight:800;z-index:99;box-shadow:0 4px 20px rgba(62,47,35,.4);animation:tin .3s}
+.toast.err{background:#b3402e}
 @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.modal{position:fixed;inset:0;background:rgba(5,8,15,.8);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal .box{background:#1a2236;border:1px solid #2c3860;border-radius:18px;padding:20px;width:100%;max-width:420px;max-height:88vh;overflow:auto}
-.pulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:#fbbf24;margin-right:6px;animation:pl 1s infinite}
-@keyframes pl{50%{opacity:.3}}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;color:#8b96ad;font-size:10.5px;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid #26304a}
-td{padding:8px 4px;border-bottom:1px solid #1e2740}
+.modal{position:fixed;inset:0;background:rgba(62,47,35,.55);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal .box{background:#fff;border:1px solid #e6dccc;border-radius:20px;padding:22px;width:100%;max-width:440px;max-height:88vh;overflow:auto;color:#3e2f23}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:#9c8b78;font-size:12px;text-transform:uppercase;padding:7px 4px;border-bottom:2px solid #e6dccc}
+td{padding:9px 4px;border-bottom:1px solid #f0e9dc;color:#3e2f23}
 .direita,td.r{text-align:right}
-.hint{font-size:11px;color:#8b96ad;line-height:1.5;margin-top:8px}
-.wa{display:inline-block;background:#16a34a;color:#fff;text-decoration:none;padding:9px 14px;border-radius:10px;font-size:12.5px;font-weight:800;margin-top:8px}
-
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:4px}
-.day{background:#212b44;border:1.5px solid #2c3860;border-radius:11px;padding:7px 2px;text-align:center;cursor:pointer}
-.day .dw{font-size:9.5px;color:#8b96ad;font-weight:800;text-transform:uppercase}
-.day .dn{font-size:16px;font-weight:800;margin:2px 0}
-.day .dv{font-size:8.5px;font-weight:800;border-radius:8px;padding:2px 0}
-.day.livre{border-color:#16a34a}.day.livre .dv{background:#103a2a;color:#34d399}
-.day.quase{border-color:#d97706}.day.quase .dv{background:#3a2c10;color:#fbbf24}
-.day.cheio{border-color:#7f1d1d;opacity:.55}.day.cheio .dv{background:#3a1414;color:#f87171}
-.day.fechado{opacity:.35}.day.fechado .dv{color:#8b96ad}
-.day.sel{background:#1d3a5f;border-color:#4da3ff;box-shadow:0 0 0 2px rgba(77,163,255,.25)}
-.slot{padding:7px 2px}
-.slot .st{font-size:13px}
-.slot .sv{font-size:8.5px;font-weight:800;margin-top:2px;border-radius:8px;padding:1px 0}
-.slot.livre{border-color:#16a34a}.slot.livre .sv{color:#34d399}
-.slot.quase{border-color:#d97706}.slot.quase .sv{color:#fbbf24}
-.slot.full{border-color:#7f1d1d}.slot.full .sv{color:#f87171}
+.hint{font-size:13px;color:#8a7a66;line-height:1.55;margin-top:9px}
+.wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:800;margin-top:10px}
 </style>
 </head>
 <body>
@@ -129,8 +123,8 @@ td{padding:8px 4px;border-bottom:1px solid #1e2740}
   <div class="card" id="cardData">
     <h3>2. Dia e horário</h3>
     <div class="days" id="dayList"></div>
-    <div class="hint" id="dayHint">🟢 livre · 🟡 poucas vagas · 🔴 cheio — conforme a agenda enche</div>
-    <label>Horário — vagas ao vivo</label>
+    <div class="hint" id="dayHint">🟢 livre · 🟡 quase cheio · 🔴 cheio — atualiza sozinho conforme a agenda enche</div>
+    <label>Horário de entrada — 1 carro por horário</label>
     <div class="slots" id="slotList"></div>
     <div class="hint" id="slotHint"></div>
   </div>
@@ -150,7 +144,7 @@ td{padding:8px 4px;border-bottom:1px solid #1e2740}
     <div class="pay" id="payList"></div>
     <div class="hint" id="pixHint"></div>
   </div>
-  <div class="card" id="cardResumo" style="border-color:#1273de">
+  <div class="card" id="cardResumo" style="border-color:#6d4c2f">
     <h3>4. Resumo</h3>
     <div id="resumo"></div>
     <button class="btn p" style="margin-top:12px" onclick="confirmar()">✅ Confirmar agendamento</button>
@@ -254,9 +248,9 @@ td{padding:8px 4px;border-bottom:1px solid #1e2740}
           <div><label>Fecha</label><input type="time" id="cFecha"></div>
         </div>
         <div class="row" style="margin-top:10px">
-          <div><label>Intervalo (min)</label>
-            <select id="cInt"><option value="30">30 min</option><option value="60">1 hora</option><option value="90">1h30</option></select></div>
-          <div><label>Vagas por horário</label><input type="number" id="cVagas" min="1" max="6"></div>
+          <div><label>Duração por carro</label>
+            <select id="cInt"><option value="120">2h00</option><option value="140">2h20</option><option value="160">2h40</option><option value="180">3h00</option></select></div>
+          <div><label>Carros por horário</label><input type="number" id="cVagas" min="1" max="6"></div>
         </div>
         <label style="margin-top:10px">Pausa almoço</label>
         <div class="row">
@@ -310,8 +304,8 @@ function seed(){
   return {
     cfg:{
       nome:'A.F Car Wash', emoji:'🚗', wapp:'', logo:'',
-      abre:'07:00', fecha:'18:00', int:30, vagas:2,
-      almocoI:'12:00', almocoF:'13:00', fechados:[0],
+      abre:'07:00', fecha:'18:00', int:140, vagas:1,
+      almocoI:'', almocoF:'', fechados:[0],
       pix:'Chave PIX será configurada pelo gestor',
       pin:'1234'
     },
@@ -323,7 +317,7 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];}
+function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;save();}if(DB.cfg.logo===undefined)DB.cfg.logo='';}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -340,7 +334,7 @@ document.getElementById('nav').addEventListener('click',e=>{
 /* ============ AGENDAR ============ */
 function renderSvcs(){
   document.getElementById('hNome').textContent=DB.cfg.nome;
-  const ld=document.getElementById('hLogo');if(ld&&DB.cfg.logo&&!ld.dataset.custom){ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:12px;object-fit:cover">';ld.dataset.custom='1';}
+  const ld=document.getElementById('hLogo');if(ld&&DB.cfg.logo&&!ld.dataset.custom){ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';}
   document.title=DB.cfg.nome+' — Agendamento';
   document.getElementById('svcList').innerHTML=DB.svc.map(s=>`
     <div class="svc ${sel.svc===s.id?'sel':''}" onclick="pickSvc('${s.id}')">
@@ -355,24 +349,26 @@ function renderSlots(){
   const box=document.getElementById('slotList');
   const di=new Date(d+'T12:00').getDay();
   if((DB.cfg.fechados||[]).includes(di)){box.innerHTML='<div class="empty" style="grid-column:1/-1">Fechado neste dia 🚫</div>';sel.hora=null;resumo();return;}
-  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||30;
+  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||140;
   const ai=hm2m(DB.cfg.almocoI||'12:00'),af=hm2m(DB.cfg.almocoF||'13:00');
   const vagas=+DB.cfg.vagas||1;
   let html='',livres=0;
-  for(let m=ini;m+(DB.svc.find(s=>s.id===sel.svc)?.dur||60)/2<=fim;m+=int){
+  for(let m=ini;m+(DB.svc.find(s=>s.id===sel.svc)?.dur||140)/2<=fim;m+=int){
     const t=hm(m);
-    const almoco=m>=ai&&m<af;
+    const almoco=DB.cfg.almocoI&&m>=ai&&m<af;
     const q=DB.orders.filter(o=>o.data===d&&o.hora===t&&!['cancelado'].includes(o.status)).length;
     const rest=Math.max(0,vagas-q);
     const cheio=rest<=0;
     const passado=(d===hoje()&&m<=agoraMin()+30);
     const off=almoco||passado;
     if(!off&&!cheio)livres+=rest;
-    const st=cheio?'full':(rest===1?'quase':'livre');
-    html+=`<div class="slot ${off?'off':''} ${st} ${sel.hora===t?'sel':''}" onclick="pickHora('${t}')"><div class="st">${t}</div><div class="sv">${off?'—':(cheio?'cheio':rest+' vaga'+(rest>1?'s':''))}</div></div>`;
+    const durSel=(DB.svc.find(s=>s.id===sel.svc)?.dur)||140;
+    const st=cheio?'full':(vagas===1?'livre':(rest===1?'quase':'livre'));
+    const sub=off?'—':(cheio?'ocupado':(vagas===1?('pronto ~'+hm(m+durSel)):(rest+' vaga'+(rest>1?'s':''))));
+    html+=`<div class="slot ${off?'off':''} ${st} ${sel.hora===t?'sel':''}" onclick="pickHora('${t}')"><div class="st">${t}</div><div class="sv">${sub}</div></div>`;
   }
   box.innerHTML=html||'<div class="empty">Nenhum horário configurado.</div>';
-  document.getElementById('slotHint').innerHTML=`🟢 livre · 🟡 última vaga · 🔴 cheio — atualiza sozinho conforme a agenda enche. Selecione o horário em que você <b>chega</b>.${livres?(' <b>'+livres+' vagas livres neste dia.</b>'):' <b>Dia cheio — escolha outro.</b>'}`;
+  document.getElementById('slotHint').innerHTML=`🟢 livre · 🔴 ocupado — <b>cada horário recebe 1 carro</b> e a lavagem leva <b>~2h20</b>. O horário mostra quando o carro fica pronto. Atualiza sozinho conforme a agenda enche.${livres?(' <b>'+livres+' horário(s) livre(s) no dia.</b>'):' <b>Dia cheio — escolha outro.</b>'}`;
   resumo();
 }
 function renderDays(){
@@ -392,13 +388,13 @@ function renderDays(){
   box.innerHTML=html;
 }
 function capDia(ds){
-  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||30;
+  const ini=hm2m(DB.cfg.abre),fim=hm2m(DB.cfg.fecha),int=+DB.cfg.int||140;
   const ai=hm2m(DB.cfg.almocoI||'12:00'),af=hm2m(DB.cfg.almocoF||'13:00');
   const vagas=+DB.cfg.vagas||1;
-  const durM=DB.svc.length?DB.svc.reduce((s,x)=>s+x.dur,0)/DB.svc.length:120;
+  const durM=DB.svc.length?DB.svc.reduce((s,x)=>s+x.dur,0)/DB.svc.length:140;
   let total=0,usado=0;
   for(let m=ini;m+durM/2<=fim;m+=int){
-    if(m>=ai&&m<af)continue;
+    if(DB.cfg.almocoI&&m>=ai&&m<af)continue;
     if(ds===hoje()&&m<=agoraMin()+30)continue;
     total+=vagas;
     const t=hm(m);
@@ -493,7 +489,7 @@ function meusBuscar(){
 }
 function renderMeus(list){
   const box=document.getElementById('meusList');
-  if(!list||!list.length){box.innerHTML='<div class="empty">Nenhuma lavagem encontrada para este telefone.<br>Agende a primeira! 🧽</div>';return;}
+  if(!list||!list.length){box.innerHTML='<div class="empty">Nenhuma lavagem encontrada para este telefone.<br>Agende a primeira! 🚗</div>';return;}
   box.innerHTML=list.map(o=>{
     let extra='';
     if(o.status==='andamento'&&o.timer){
@@ -503,14 +499,14 @@ function renderMeus(list){
       const restTxt=rest>60000?Math.ceil(rest/60000)+' min restantes':'quase lá!';
       extra=`<div class="prog"><div class="fill" style="width:${Math.max(6,pct)}%">${pct}%</div></div><div class="pct">🧽 Em lavagem — ${restTxt}</div>`;
     }
-    if(o.status==='pronto')extra=`<div class="pct" style="color:#34d399">✨ PRONTO! Pode buscar o carro.</div>`;
-    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#fbbf24">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
-    if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#121928;border:1px dashed #2c3860;border-radius:10px;padding:10px;font-size:12px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
+    if(o.status==='pronto')extra=`<div class="pct" style="color:#2e7d32">✨ PRONTO! Pode buscar o carro.</div>`;
+    if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
+    if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#faf6ef;border:2px dashed #ddd2c0;border-radius:12px;padding:12px;font-size:14px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
     const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
     return `<div class="os">
       <div class="top"><div><div class="cd">${o.cd} · ${fmtBR(o.data)} ${o.hora}</div><div class="cl">${esc(o.svcNome)} · ${esc(o.modelo)}</div></div>
       <span class="badge ${badge[0]}">${badge[1]}</span></div>
-      <div style="font-size:12px;color:#9aa6bf;margin-top:6px">${brl(o.preco)} · ${o.pag.toUpperCase()}${o.placa?' · '+esc(o.placa):''}</div>
+      <div style="font-size:14px;color:#7a6a58;margin-top:6px">${brl(o.preco)} · ${o.pag.toUpperCase()}${o.placa?' · '+esc(o.placa):''}</div>
       ${extra}
       ${o.status==='agendado'?`<button class="btn s" style="margin-top:10px;padding:9px" onclick="cancelar('${o.cd}')">Cancelar agendamento</button>`:''}
       ${o.status!=='pago'&&o.status!=='cancelado'&&o.status!=='pronto'&&o.status!=='andamento'?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Sobre meu agendamento '+o.cd+' ('+o.svcNome+' em '+fmtBR(o.data)+' às '+o.hora+')')}" style="margin-top:10px">💬 Falar com a loja</a>`:''}
@@ -538,7 +534,7 @@ function login(){
     document.getElementById('gestorLock').classList.add('hidden');
     document.getElementById('gestorPanel').classList.remove('hidden');
     renderGestor();toast('Bem-vindo, André!');
-  }else{document.getElementById('pinHint').innerHTML='<span style="color:#f87171">PIN incorreto</span>';}
+  }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
   document.getElementById('gData').value=sel.data||hoje();
@@ -561,37 +557,37 @@ function renderAgenda(){
   box.innerHTML=list.map(o=>{
     const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status];
     let acoes='';
-    if(o.status==='agendado')acoes=`<button class="btn g" style="padding:8px;font-size:12px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
+    if(o.status==='agendado')acoes=`<button class="btn g" style="padding:9px;font-size:14px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
     if(o.status==='andamento'){
       const p=o.timer?Math.min(100,Math.round((Date.now()-o.timer.start)/o.timer.dur*100)):0;
       const rest=o.timer?Math.max(0,o.timer.dur-(Date.now()-o.timer.start)):0;
       acoes=`<div class="prog"><div class="fill" style="width:${Math.max(6,p)}%">${p}%</div></div>
       <div class="pct">⏱️ ${rest>60000?Math.ceil(rest/60000)+' min restantes':'tempo estourado — finalize quando terminar'}</div>
       <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn p" style="padding:8px;font-size:12px" onclick="chamarCliente('${o.cd}')">✅ Lavagem concluída</button>
-        <button class="btn s" style="padding:8px;font-size:12px" onclick="reajustar('${o.cd}')">⏱️ +15min</button>
+        <button class="btn p" style="padding:9px;font-size:13.5px" onclick="chamarCliente('${o.cd}')">✅ Lavagem concluída</button>
+        <button class="btn s" style="padding:9px;font-size:13.5px" onclick="reajustar('${o.cd}')">⏱️ +15min</button>
       </div>`;
     }
     if(o.status==='pronto'){
       const mins=o.timer&&o.timer.fim?Math.round((Date.now()-o.timer.fim)/60000):0;
-      acoes=`<div class="pct" style="color:#34d399">Pronto há ${mins} min</div>
-      <button class="btn g" style="padding:8px;font-size:12px;margin-top:6px" onclick="receber('${o.cd}')">💰 Receber ${brl(o.preco)} (${o.pag})</button>`;
+      acoes=`<div class="pct" style="color:#2e7d32">Pronto há ${mins} min</div>
+      <button class="btn g" style="padding:9px;font-size:13.5px;margin-top:6px" onclick="receber('${o.cd}')">💰 Receber ${brl(o.preco)} (${o.pag})</button>`;
     }
     if(o.status==='pago')acoes=`<div class="hint">💚 Pago em ${new Date(o.pagoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · ${o.pag}</div>`;
     return `<div class="os">
       <div class="top"><div><div class="cd">${o.cd} · ${o.hora}</div><div class="cl">${esc(o.nome)} · ${esc(o.modelo)}</div></div>
       <span class="badge ${badge[0]}">${badge[1]}</span></div>
-      <div style="font-size:12px;color:#9aa6bf;margin-top:4px">${esc(o.svcNome)} · ${brl(o.preco)} · ${o.pag}${o.placa?' · '+esc(o.placa):''}${o.obs?'<br>📝 '+esc(o.obs):''}</div>
-      <div style="font-size:12px;color:#8b96ad;margin-top:4px">📞 ${esc(o.fone)}</div>
+      <div style="font-size:14px;color:#7a6a58;margin-top:4px">${esc(o.svcNome)} · ${brl(o.preco)} · ${o.pag}${o.placa?' · '+esc(o.placa):''}${o.obs?'<br>📝 '+esc(o.obs):''}</div>
+      <div style="font-size:14px;color:#8a7a66;margin-top:4px">📞 ${esc(o.fone)}</div>
       ${acoes}
-      ${o.status!=='pago'&&o.status!=='andamento'&&o.status!=='pronto'?`<button class="btn s" style="padding:6px;font-size:11px;margin-top:8px" onclick="delOrder('${o.cd}')">🗑 Remover</button>`:''}
+      ${o.status!=='pago'&&o.status!=='andamento'&&o.status!=='pronto'?`<button class="btn s" style="padding:7px;font-size:12.5px;margin-top:8px" onclick="delOrder('${o.cd}')">🗑 Remover</button>`:''}
     </div>`;
   }).join('');
 }
 function iniciar(cd){
   const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
   o.status='andamento';
-  o.timer={start:Date.now(),dur:(o.dur||120)*60000};
+  o.timer={start:Date.now(),dur:(o.dur||140)*60000};
   save();renderAgenda();renderAtivos();toast('Lavagem iniciada — cronômetro rodando ⏱️');
 }
 function chamarCliente(cd){
@@ -615,13 +611,13 @@ function renderAtivos(){
   box.innerHTML=at.map(o=>{
     const p=o.timer?Math.min(100,Math.round(((o.status==='pronto'?o.timer.fim:Date.now())-o.timer.start)/o.timer.dur*100)):0;
     const atrasado=o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000;
-    return `<div class="os" style="${atrasado?'border-color:#fbbf24':''}">
+    return `<div class="os" style="${atrasado?'border-color:#c9a227':''}">
       <div class="top"><div><div class="cd">${o.cd} · ${o.hora}</div><div class="cl">${esc(o.nome)} · ${esc(o.modelo)}</div></div>
       <span class="badge ${o.status==='pronto'?'b-pronto':'b-prog'}">${o.status==='pronto'?'✅ Pronto':'🧽 '+p+'%'}</span></div>
-      ${o.status==='pronto'&&atrasado?'<div class="hint" style="color:#fbbf24">⏰ Cliente ainda não buscou — '+Math.round((Date.now()-o.timer.fim)/60000)+' min</div>':''}
+      ${o.status==='pronto'&&atrasado?'<div class="hint" style="color:#9a7d0a">⏰ Cliente ainda não buscou — '+Math.round((Date.now()-o.timer.fim)/60000)+' min</div>':''}
       ${o.status==='andamento'?`<div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn p" style="padding:7px;font-size:11.5px" onclick="chamarCliente('${o.cd}')">✅ Concluído</button>
-        <button class="btn s" style="padding:7px;font-size:11.5px" onclick="reajustar('${o.cd}')">⏱️ +15min</button></div>`:''}
+        <button class="btn p" style="padding:8px;font-size:13px" onclick="chamarCliente('${o.cd}')">✅ Concluído</button>
+        <button class="btn s" style="padding:8px;font-size:13px" onclick="reajustar('${o.cd}')">⏱️ +15min</button></div>`:''}
     </div>`;
   }).join('');
 }
@@ -651,13 +647,13 @@ function renderFin(){
   const tk=lav?totR/lav:0;
   document.getElementById('kpiFin').innerHTML=`
     <div class="kpi"><div class="l">Receita do mês</div><div class="v ok">${brl(totR)}</div></div>
-    <div class="kpi"><div class="l">Despesas do mês</div><div class="v" style="color:#f87171">${brl(totD)}</div></div>
+    <div class="kpi"><div class="l">Despesas do mês</div><div class="v" style="color:#b3402e">${brl(totD)}</div></div>
     <div class="kpi"><div class="l">Resultado</div><div class="v ${totR-totD>=0?'ok':'am'}">${brl(totR-totD)}</div></div>
     <div class="kpi"><div class="l">A receber (pendentes)</div><div class="v am">${brl(pendTot)}</div></div>
     <div class="kpi"><div class="l">Lavagens pagas</div><div class="v bl">${lav}</div></div>
     <div class="kpi"><div class="l">Ticket médio</div><div class="v">${brl(tk)}</div></div>
-    <div class="kpi"><div class="l">PIX / Dinheiro / Cartão</div><div class="v" style="font-size:13px">${brl(pPix)} / ${brl(pDin)} / ${brl(pCar)}</div></div>
-    <div class="kpi"><div class="l">Custo estimado (25%)</div><div class="v" style="color:#f87171">${brl(rec.reduce((s,p)=>s+p.custo,0))}</div></div>`;
+    <div class="kpi"><div class="l">PIX / Dinheiro / Cartão</div><div class="v" style="font-size:15px">${brl(pPix)} / ${brl(pDin)} / ${brl(pCar)}</div></div>
+    <div class="kpi"><div class="l">Custo estimado (25%)</div><div class="v" style="color:#b3402e">${brl(rec.reduce((s,p)=>s+p.custo,0))}</div></div>`;
   const rl=document.getElementById('recList');
   const recHoje=DB.pay.filter(p=>p.data===hoje());
   rl.innerHTML=`<div class="hint">Hoje: <b>${brl(recHoje.reduce((s,p)=>s+p.valor,0))}</b> em ${recHoje.length} lavagem(ns).</div><div class="hr"></div>`+
@@ -665,7 +661,7 @@ function renderFin(){
     rec.slice().sort((a,b)=>b.id-a.id).map(p=>`<tr><td>${fmtBR(p.data)}</td><td>${esc(p.cliente)}</td><td>${esc(p.svc)}</td><td>${p.metodo}</td><td class="r ok">${brl(p.valor)}</td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma receita este mês.</div>');
   const dl=document.getElementById('despList');
   dl.innerHTML=desp.length?`<table><tr><th>Data</th><th>Descrição</th><th class="r">Valor</th><th></th></tr>`+
-    desp.slice().sort((a,b)=>b.id-a.id).map(d=>`<tr><td>${fmtBR(d.data)}</td><td>${esc(d.desc)}</td><td class="r" style="color:#f87171">${brl(d.val)}</td><td class="r"><button class="btn s" style="padding:3px 8px;font-size:10px" onclick="delDesp(${d.id})">🗑</button></td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma despesa lançada.</div>';
+    desp.slice().sort((a,b)=>b.id-a.id).map(d=>`<tr><td>${fmtBR(d.data)}</td><td>${esc(d.desc)}</td><td class="r" style="color:#b3402e">${brl(d.val)}</td><td class="r"><button class="btn s" style="padding:4px 9px;font-size:11.5px" onclick="delDesp(${d.id})">🗑</button></td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma despesa lançada.</div>';
   const pl=document.getElementById('pendList');
   const pendList=DB.orders.filter(o=>['agendado','andamento','pronto'].includes(o.status));
   pl.innerHTML=pendList.length?`<table><tr><th>Código</th><th>Cliente</th><th>Serviço</th><th>Quando</th><th class="r">Valor</th></tr>`+
@@ -690,25 +686,25 @@ function loadCfgForm(){
   document.getElementById('cPix').value=c.pix;document.getElementById('cWapp').value=c.wapp;
   document.getElementById('cNome').value=c.nome;
   const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#dc2626;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
+  document.getElementById('cDias').innerHTML=dias.map((d,i)=>`<span class="pill" style="cursor:pointer;${(c.fechados||[]).includes(i)?'background:#b3402e;color:#fff':''}" onclick="tglDia(${i})">${d}</span>`).join('');
   renderCfgSvc();
 }
 function renderCfgSvc(){
   document.getElementById('cfgSvc').innerHTML=DB.svc.map((s,i)=>`
-    <div style="background:#212b44;border:1px solid #2c3860;border-radius:12px;padding:12px;margin-bottom:10px">
+    <div style="background:#faf6ef;border:1px solid #e6dccc;border-radius:14px;padding:14px;margin-bottom:12px">
       <label>Serviço ${i+1}</label>
       <input value="${esc(s.nome)}" onchange="DB.svc[${i}].nome=this.value;save();renderSvcs()">
       <label style="margin-top:8px">Descrição</label>
       <textarea rows="2" onchange="DB.svc[${i}].desc=this.value;save();renderSvcs()">${esc(s.desc)}</textarea>
       <div class="row" style="margin-top:8px">
         <div><label>Preço R$</label><input type="number" step="0.01" value="${s.preco}" onchange="DB.svc[${i}].preco=+this.value;save();renderSvcs()"></div>
-        <div><label>Duração (min)</label><input type="number" step="15" value="${s.dur}" onchange="DB.svc[${i}].dur=+this.value;save();renderSvcs()"></div>
+        <div><label>Duração (min)</label><input type="number" step="10" value="${s.dur}" onchange="DB.svc[${i}].dur=+this.value;save();renderSvcs()"></div>
       </div>
-      <button class="btn d" style="padding:6px;font-size:11px;margin-top:8px" onclick="delSvc(${i})">🗑 Excluir serviço</button>
+      <button class="btn d" style="padding:7px;font-size:12.5px;margin-top:8px" onclick="delSvc(${i})">🗑 Excluir serviço</button>
     </div>`).join('');
 }
 function addSvc(){
-  DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:120});
+  DB.svc.push({id:'s'+Date.now(),nome:'Novo serviço',desc:'Descreva o serviço',preco:50,dur:140});
   save();renderCfgSvc();toast('Serviço adicionado — edite nome, preço e duração');
 }
 function delSvc(i){
@@ -725,14 +721,14 @@ function saveCfg(){
   const c=DB.cfg;
   c.abre=document.getElementById('cAbre').value||'07:00';
   c.fecha=document.getElementById('cFecha').value||'18:00';
-  c.int=+document.getElementById('cInt').value||30;
+  c.int=+document.getElementById('cInt').value||140;
   c.vagas=+document.getElementById('cVagas').value||1;
   c.almocoI=document.getElementById('cAlmI').value||'';
   c.almocoF=document.getElementById('cAlmF').value||'';
   c.pix=document.getElementById('cPix').value;
   c.wapp=document.getElementById('cWapp').value.replace(/\D/g,'');
   c.nome=document.getElementById('cNome').value||c.nome;
-  save();renderSvcs();renderSlots();toast('Configurações salvas ✅');
+  save();renderSvcs();renderDays();renderSlots();toast('Configurações salvas ✅');
 }
 function trocaPin(){
   const p=document.getElementById('cPin').value.trim();
@@ -742,7 +738,7 @@ function trocaPin(){
 function backup(){
   const a=document.createElement('a');
   a.href='data:application/json,'+encodeURIComponent(JSON.stringify(DB));
-  a.download='backup-lavajato-'+hoje()+'.json';a.click();toast('Backup baixado');
+  a.download='backup-afcarwash-'+hoje()+'.json';a.click();toast('Backup baixado');
 }
 function restore(inp){
   const f=inp.files[0];if(!f)return;
@@ -764,7 +760,7 @@ function addCfgInputs(){
 document.addEventListener('change',e=>{
   if(e.target.id==='cLogo'&&e.target.files[0]){
     const r=new FileReader();
-    r.onload=()=>{DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:12px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');};
+    r.onload=()=>{DB.cfg.logo=r.result;save();const ld=document.getElementById('hLogo');ld.innerHTML='<img src="'+DB.cfg.logo+'" style="width:100%;height:100%;border-radius:14px;object-fit:cover">';ld.dataset.custom='1';toast('Logo atualizado ✅');};
     r.readAsDataURL(e.target.files[0]);
   }
 });
