@@ -311,11 +311,15 @@ function startLive(){
   if(esDB||!('EventSource'in window))return;
   try{
     esDB=new EventSource(NTFY+'/'+topDB()+'/sse?since=all');
-    esDB.onmessage=e=>{
+    esDB.onmessage=async e=>{
       try{
         const ev=JSON.parse(e.data);
-        if(!ev||ev.title!=='db'||!ev.message)return;
-        const b=JSON.parse(ev.message);
+        if(!ev||ev.title!=='db')return;
+        let b=null;
+        if(ev.message){try{b=JSON.parse(ev.message)}catch(err){}}
+        if((!b||!b.t)&&ev.attachment&&ev.attachment.url){
+          try{b=JSON.parse(await(await fetch(ev.attachment.url,{cache:'no-store'})).text())}catch(err){}
+        }
         if(b&&b.t)mergeBlob(b);
       }catch(err){}
     };
@@ -680,7 +684,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v18 CLIENTE · 11/10 00h30 · pagamento em cima (passo 3)';
+const VERSAO='v18.1 CLIENTE · 11/10 10h45 · sync ao vivo corrigido';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;

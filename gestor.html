@@ -277,6 +277,11 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
 
 <!-- ================= GESTOR ================= -->
 <div id="pg-gestor" class="hidden">
+    <div id="notifBar" class="card" style="display:none;align-items:center;gap:10px;padding:12px 14px;margin:12px 14px 0;background:linear-gradient(135deg,#fff7e6,#ffe9c7);border:1px solid #f5c66b">
+      <span style="font-size:22px">🔔</span>
+      <div style="flex:1;font-size:13.5px;font-weight:700;color:#7a4d00">Ative as notificações para receber cada agendamento na hora</div>
+      <button class="btn g" onclick="ativarNotif()">Ativar</button>
+    </div>
   <div id="gestorLock">
     <div class="card" style="text-align:center;padding:30px 16px">
       <div style="font-size:40px">🔐</div>
@@ -497,11 +502,15 @@ function startLive(){
   if(esDB||!('EventSource'in window))return;
   try{
     esDB=new EventSource(NTFY+'/'+topDB()+'/sse?since=all');
-    esDB.onmessage=e=>{
+    esDB.onmessage=async e=>{
       try{
         const ev=JSON.parse(e.data);
-        if(!ev||ev.title!=='db'||!ev.message)return;
-        const b=JSON.parse(ev.message);
+        if(!ev||ev.title!=='db')return;
+        let b=null;
+        if(ev.message){try{b=JSON.parse(ev.message)}catch(err){}}
+        if((!b||!b.t)&&ev.attachment&&ev.attachment.url){
+          try{b=JSON.parse(await(await fetch(ev.attachment.url,{cache:'no-store'})).text())}catch(err){}
+        }
         if(b&&b.t)mergeBlob(b);
       }catch(err){}
     };
@@ -528,13 +537,19 @@ function mergeBlob(b){
   if(!b||b.t<=(DB.cloudT||0))return;
   noPub=true;
   try{
+    const antes=new Set((DB.orders||[]).map(x=>x.id));
     const un=(arr,key)=>{const m={};(DB[key]||[]).forEach(x=>m[x.id]=x);(arr||[]).forEach(x=>{const c=m[x.id];if(!c||(x.criado||x.id||0)>(c.criado||c.id||0))m[x.id]=x});DB[key]=Object.values(m)};
     un(b.orders,'orders');un(b.pay,'pay');un(b.desp,'desp');
+    const novos=(DB.orders||[]).filter(x=>!antes.has(x.id));
     DB.seq=Math.max(DB.seq||1,b.seq||1);
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
     if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
     DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();
-    if(gestor){renderGestor();toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
+    if(gestor){renderGestor();if(!document.hidden)toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
+    novos.forEach(o=>{
+      if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)})}catch(e){}}
+      if('vibrate'in navigator)navigator.vibrate([200,100,200]);
+    });
   }finally{noPub=false}
 }
 function notifyNovo(o){
@@ -544,8 +559,9 @@ function notifyNovo(o){
 }
 function ativarNotif(){
   if(!('Notification'in window))return toast('Navegador sem suporte a notificações',1);
-  Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas 🔔':'Permissão negada no navegador',p==='granted'?0:1));
+  Notification.requestPermission().then(p=>{toast(p==='granted'?'Notificações ativadas 🔔':'Permissão negada no navegador',p==='granted'?0:1);notifBarUpd();});
 }
+function notifBarUpd(){const b=document.getElementById('notifBar');if(!b)return;b.style.display=('Notification'in window&&Notification.permission==='granted')?'none':'flex';}
 function cloudStat(){const el=document.getElementById('cloudStat');if(el)el.textContent=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';}
 
 function seed(){
@@ -874,7 +890,7 @@ function login(){
     document.getElementById('pg-gestor').classList.remove('hidden');
     fecharModalGestor();
     window.scrollTo(0,0);
-    renderGestor();pullDB();toast('Bem-vindo, '+who+'! 🔐');
+    renderGestor();notifBarUpd();pullDB();toast('Bem-vindo, '+who+'! 🔐');
   }else{document.getElementById('pinHint').innerHTML='<span style="color:#b3402e">PIN incorreto</span>';}
 }
 function renderGestor(){
@@ -1291,7 +1307,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v17 GESTOR · 11/10 00h15 · sincronização ao vivo';
+const VERSAO='v18 GESTOR · 11/10 10h45 · sync ao vivo corrigido + notificação em destaque';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1306,9 +1322,9 @@ sel.data=hoje();
 go('gestor');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
-setInterval(()=>{if(gestor&&!document.hidden)pullDB()},10000);
+setInterval(()=>{if(gestor&&!document.hidden)pullDB()},10000);setInterval(()=>{if(gestor&&document.hidden)pullDB()},14000);
 startLive();
-if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
+if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();notifBarUpd();}
 </script>
 </body>
 </html>
