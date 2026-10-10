@@ -891,7 +891,7 @@ function renderGeral(){
   if(gh){
     const list=oh.sort((a,b)=>a.hora.localeCompare(b.hora));
     gh.innerHTML=list.length?list.map(o=>{
-      const badge={agendado:['b-agd','📅 '+o.hora],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago']}[o.status]||['b-agd',o.status];
+      const badge={agendado:['b-agd','📅 '+o.hora],aguardando_pg:['b-prog','⏳ Aguardando PIX'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago']}[o.status]||['b-agd',o.status];
       return `<div class="os"><div class="top"><div><div class="cd">${o.hora} · ${esc(o.nome)}</div><div class="cl">${esc(o.svcNome)} · ${brl(o.preco)}</div></div><span class="badge ${badge[0]}">${badge[1]}</span></div></div>`;
     }).join(''):'<div class="empty">Nenhuma lavagem hoje ainda. 🌙</div>';
   }
@@ -960,7 +960,7 @@ function fechamentoCaixa(){
 function renderAgenda(){
   const d=document.getElementById('gData').value||hoje();
   const list=DB.orders.filter(o=>o.data===d).sort((a,b)=>a.hora.localeCompare(b.hora));
-  const kpiAgd=list.filter(o=>o.status==='agendado').length;
+  const kpiAgd=list.filter(o=>o.status==='agendado'||o.status==='aguardando_pg').length;
   const kpiAtv=DB.orders.filter(o=>o.status==='andamento').length;
   const kpiFat=DB.pay.filter(p=>p.data===d).reduce((s,p)=>s+p.valor,0);
   document.getElementById('kpiAgd').innerHTML=`
@@ -971,8 +971,13 @@ function renderAgenda(){
   const box=document.getElementById('agendaList');
   if(!list.length){box.innerHTML='<div class="empty">Nenhum agendamento neste dia.<br><b>Use "Visão geral" → Lançar lavagem avulsa</b> se um cliente chegou sem agendar.</div>';return;}
   box.innerHTML=list.map(o=>{
-    const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status];
+    const badge={agendado:['b-agd','📅 Agendado'],aguardando_pg:['b-prog','⏳ Aguardando PIX'],andamento:['b-prog','🧽 Lavando'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status];
     let acoes='';
+    if(o.status==='aguardando_pg')acoes=`<div class="pct" style="color:#9a7d0a">⏳ Cliente precisa pagar o PIX — confira o comprovante</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn g" style="padding:9px;font-size:13.5px" onclick="confirmarPix('${o.cd}')">✅ Confirmar pagamento (PIX)</button>
+        <button class="btn s" style="padding:9px;font-size:13.5px" onclick="iniciar('${o.cd}')">▶️ Iniciar mesmo assim</button>
+      </div>`;
     if(o.status==='agendado')acoes=`<button class="btn bl" style="padding:9px;font-size:14px" onclick="iniciar('${o.cd}')">▶️ Iniciar lavagem</button>`;
     if(o.status==='andamento'){
       const p=o.timer?Math.min(100,Math.round((Date.now()-o.timer.start)/o.timer.dur*100)):0;
@@ -999,6 +1004,13 @@ function renderAgenda(){
       ${o.status!=='pago'&&o.status!=='andamento'&&o.status!=='pronto'?`<button class="btn s" style="padding:7px;font-size:12.5px;margin-top:8px" onclick="delOrder('${o.cd}')">🗑 Remover</button>`:''}
     </div>`;
   }).join('');
+}
+function confirmarPix(cd){
+  const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
+  o.status='pago';o.pago=true;o.pagoEm=Date.now();
+  DB.pay.push({id:Date.now(),data:hoje(),cd:o.cd,cliente:o.nome,svc:o.svcNome,metodo:'pix',valor:o.preco,custo:Math.round(o.preco*0.25*100)/100,lucro:o.preco-Math.round(o.preco*0.25*100)/100});
+  save();renderAgenda();renderAtivos();renderFin();renderGeral();
+  toast('PIX confirmado — agendamento ✅ Confirmado 💰');
 }
 function iniciar(cd){
   const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
@@ -1055,7 +1067,7 @@ function renderFin(){
   const desp=DB.desp.filter(d=>d.data.startsWith(mes));
   const totR=rec.reduce((s,p)=>s+p.valor,0);
   const totD=desp.reduce((s,d)=>s+d.val,0);
-  const pendTot=DB.orders.filter(o=>['agendado','andamento','pronto'].includes(o.status)).reduce((s,o)=>s+o.preco,0);
+  const pendTot=DB.orders.filter(o=>['agendado','aguardando_pg','andamento','pronto'].includes(o.status)).reduce((s,o)=>s+o.preco,0);
   const pPix=rec.filter(p=>p.metodo==='pix').reduce((s,p)=>s+p.valor,0);
   const pDin=rec.filter(p=>p.metodo==='dinheiro').reduce((s,p)=>s+p.valor,0);
   const pCar=rec.filter(p=>p.metodo==='cartao').reduce((s,p)=>s+p.valor,0);
@@ -1085,7 +1097,7 @@ function renderFin(){
   dl.innerHTML=desp.length?`<table><tr><th>Data</th><th>Descrição</th><th class="r">Valor</th><th></th></tr>`+
     desp.slice().sort((a,b)=>b.id-a.id).map(d=>`<tr><td>${fmtBR(d.data)}</td><td>${esc(d.desc)}</td><td class="r" style="color:#b3402e">${brl(d.val)}</td><td class="r"><button class="btn s" style="padding:4px 9px;font-size:11.5px" onclick="delDesp(${d.id})">🗑</button></td></tr>`).join('')+'</table>':'<div class="empty">Nenhuma despesa lançada.</div>';
   const pl=document.getElementById('pendList');
-  const pendList=DB.orders.filter(o=>['agendado','andamento','pronto'].includes(o.status));
+  const pendList=DB.orders.filter(o=>['agendado','aguardando_pg','andamento','pronto'].includes(o.status));
   pl.innerHTML=pendList.length?`<table><tr><th>Código</th><th>Cliente</th><th>Serviço</th><th>Quando</th><th class="r">Valor</th></tr>`+
     pendList.map(o=>`<tr><td>${o.cd}</td><td>${esc(o.nome)}</td><td>${esc(o.svcNome)}</td><td>${fmtBR(o.data)} ${o.hora}</td><td class="r am">${brl(o.preco)}</td></tr>`).join('')+'</table>':'<div class="empty">Nada pendente. 👍</div>';
 }
@@ -1262,7 +1274,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v15 GESTOR · 10/10 23h30 · painel + financeiro (mesma nuvem do cliente)';
+const VERSAO='v16 GESTOR · 10/10 23h55 · confirmar PIX do cliente';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;

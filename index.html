@@ -502,7 +502,7 @@ function confirmar(){
   const q=DB.orders.filter(o=>o.data===sel.data&&o.hora===sel.hora&&!['cancelado'].includes(o.status)).length;
   if(q>=(+DB.cfg.vagas||1))return toast('Este horário acabou de encher — escolha outro',1);
   const cd='AG'+String(DB.seq++).padStart(4,'0');
-  const novo={id:Date.now(),cd,nome,fone:fo,modelo:mod||'—',placa,obs,svc:s.id,svcNome:s.nome,preco:s.preco,dur:s.dur,data:sel.data,hora:sel.hora,pag:sel.pag,status:'agendado',criado:Date.now(),timer:null,pago:false,pagoEm:null};
+  const novo={id:Date.now(),cd,nome,fone:fo,modelo:mod||'—',placa,obs,svc:s.id,svcNome:s.nome,preco:s.preco,dur:s.dur,data:sel.data,hora:sel.hora,pag:sel.pag,status:sel.pag==='pix'?'aguardando_pg':'agendado',criado:Date.now(),timer:null,pago:false,pagoEm:null};
   DB.orders.push(novo);
   save();
   localStorage.setItem('lj_fone',fo);
@@ -516,10 +516,11 @@ function sel0(){return DB.orders[DB.orders.length-1];}
 
 function modalConfirm(cd,nome,s,o){
   const wa=DB.cfg.wapp?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('🔔 NOVO AGENDAMENTO '+cd+' — '+s.nome+' em '+fmtBR(o.data)+' às '+o.hora+' — Cliente: '+nome+' ('+o.fone+') — Veículo: '+(o.modelo||'-')+' — '+brl(s.preco)+' via '+o.pag)}">💬 AVISAR A LOJA NO WHATSAPP (André recebe na hora)</a>`:`<button class="wa" style="border:none;cursor:pointer;font-family:inherit" onclick="toast('Avise a loja no WhatsApp: 33 99911-4393',1)">💬 AVISAR A LOJA NO WHATSAPP</button>`;
+  const isPix=o.pag==='pix';
   document.getElementById('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)this.remove()">
     <div class="box" style="text-align:center">
-      <div class="confete">🎉</div>
-      <h3 style="justify-content:center;font-size:17px">Agendamento confirmado!</h3>
+      <div class="confete">${isPix?'⏳':'🎉'}</div>
+      <h3 style="justify-content:center;font-size:17px" id="mTit"></h3>
       <div class="pill" style="margin:10px 0">${cd}</div>
       <table style="text-align:left">
         <tr><td>Serviço</td><td class="r">${esc(s.nome)}</td></tr>
@@ -527,11 +528,11 @@ function modalConfirm(cd,nome,s,o){
         <tr><td>Valor</td><td class="r ok"><b>${brl(s.preco)}</b> · ${o.pag}</td></tr>
         <tr><td>Término previsto</td><td class="r bl">${prevFim(o.hora,s.dur)}</td></tr>
       </table>
-      <div class="hint">Chegue no horário marcado. Quando a equipe começar, o andamento aparece em <b>Minhas lavagens</b> 🚗</div>
+      <div class="hint">${isPix?('<b>Pagamento no PIX pendente:</b> pague <b>'+brl(s.preco)+'</b> usando a chave acima e mande o comprovante. A loja confirma e seu horário fica <b>✅ Confirmado</b>.'):'Chegue no horário marcado. Quando a equipe começar, o andamento aparece em <b>Minhas lavagens</b> 🚗'}</div>
       ${wa}
       <button class="btn p" style="margin-top:14px" onclick="fecharModal();go('home')">Fechar</button>
     </div></div>`;
-  toast('Agendamento confirmado!');
+  document.getElementById('mTit').textContent=isPix?'Agendamento pré-reservado!':'Agendamento confirmado!';toast(isPix?'Pré-reservado — falta o PIX ⏳':'Agendamento confirmado!');
 }
 
 /* ============ WIZARD + HOME ============ */
@@ -618,13 +619,13 @@ function renderMeus(list){
     if(o.status==='pronto'&&o.timer&&o.timer.fim&&Date.now()-o.timer.fim>10*60000)extra=`<div class="pct" style="color:#9a7d0a">⏰ Pronto há mais de 10 min — venha buscar 🙂</div>`;
     if(o.status==='pronto'&&!o.pago)extra+=`<button class="btn s" style="margin-top:10px;padding:9px" onclick="aviseiPago('${o.cd}')">✅ Já paguei — avisar a loja</button>`;
     if(o.pag==='pix'&&o.status!=='pago')extra+=`<div style="margin-top:10px;background:#f7f3fd;border:2px dashed #d8ccf0;border-radius:12px;padding:12px;font-size:14px">⚡ Pague com PIX: <b>${brl(o.preco)}</b><br>Chave: <b>${esc(DB.cfg.pix)}</b><br>Mostre o comprovante na entrega.</div>`;
-    const badge={agendado:['b-agd','📅 Agendado'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
+    const badge={agendado:['b-agd','📅 Agendado'],aguardando_pg:['b-prog','⏳ Aguardando PIX'],andamento:['b-prog','🧽 Em lavagem'],pronto:['b-pronto','✅ Pronto'],pago:['b-pago','💚 Pago'],cancelado:['b-cancel','❌ Cancelado']}[o.status]||['b-agd',o.status];
     return `<div class="os">
       <div class="top"><div><div class="cd">${o.cd} · ${fmtBR(o.data)} ${o.hora}</div><div class="cl">${esc(o.svcNome)} · ${esc(o.modelo)}</div></div>
       <span class="badge ${badge[0]}">${badge[1]}</span></div>
       <div style="font-size:14px;color:#6b5f85;margin-top:6px">${brl(o.preco)} · ${o.pag.toUpperCase()}${o.placa?' · '+esc(o.placa):''}</div>
       ${extra}
-      ${o.status==='agendado'?`<button class="btn s" style="margin-top:10px;padding:9px" onclick="cancelar('${o.cd}')">Cancelar agendamento</button>`:''}
+      ${(o.status==='agendado'||o.status==='aguardando_pg')?`<button class="btn s" style="margin-top:10px;padding:9px" onclick="cancelar('${o.cd}')">Cancelar agendamento</button>`:''}
       ${o.status!=='pago'&&o.status!=='cancelado'&&o.status!=='pronto'&&o.status!=='andamento'?`<a class="wa" target="_blank" href="https://wa.me/${DB.cfg.wapp}?text=${encodeURIComponent('Olá! Sobre meu agendamento '+o.cd+' ('+o.svcNome+' em '+fmtBR(o.data)+' às '+o.hora+')')}" style="margin-top:10px">💬 Falar com a loja</a>`:''}
     </div>`;
   }).join('');
@@ -635,7 +636,7 @@ function aviseiPago(cd){
 }
 function cancelar(cd){
   const o=DB.orders.find(x=>x.cd===cd);if(!o)return;
-  if(o.status!=='agendado')return toast('Só é possível cancelar antes de começar',1);
+  if(!(o.status==='agendado'||o.status==='aguardando_pg'))return toast('Só é possível cancelar antes de começar',1);
   if(!confirm('Cancelar o agendamento '+cd+'?'))return;
   o.status='cancelado';save();meusBuscar();toast('Agendamento cancelado');
 }
@@ -662,7 +663,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v15 CLIENTE · 10/10 23h30 · app do cliente (mesma nuvem do gestor)';
+const VERSAO='v16 CLIENTE · 10/10 23h55 · PIX confirmado pela loja';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
