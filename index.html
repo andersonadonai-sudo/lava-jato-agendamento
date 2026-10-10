@@ -147,8 +147,8 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
 .mbar{height:26px;background:#ece4fa;border-radius:14px;overflow:hidden;border:1px solid #e2d9f2}
 .mfill{height:100%;background:linear-gradient(90deg,#7c3aed,#a855f7,#c9a0ff);border-radius:14px;display:flex;align-items:center;justify-content:flex-end;padding-right:9px;font-size:12px;font-weight:800;color:#fff;min-width:44px;transition:width .5s}
 .pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 4px}
-.pay button{background:#fff;border:2px solid #e2d9f2;border-radius:13px;padding:13px 6px;font-size:14.5px;font-weight:800;color:#33254d;cursor:pointer;font-family:inherit;transition:.15s}
-.pay button.sel{border-color:#7c3aed;background:#f1e9fd;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.pay button{background:#fff;border:2px solid #e2d9f2;border-radius:14px;padding:16px 6px;font-size:15.5px;font-weight:900;color:#33254d;cursor:pointer;font-family:inherit;transition:.15s;box-shadow:0 2px 8px rgba(43,33,64,.05)}
+.pay button.sel{border-color:#7c3aed;background:#f1e9fd;box-shadow:0 0 0 3px rgba(124,58,237,.2);color:#5b21b6}
 .bi svg{width:32px;height:32px;display:block}
 .ic svg{width:23px;height:23px;display:block}
 .ic{display:flex;align-items:center;justify-content:center}
@@ -229,15 +229,15 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
       <div><label>Nome</label><input id="fNome" placeholder="Seu nome"></div>
       <div><label>WhatsApp</label><input id="fFone" placeholder="(33) 99999-9999" inputmode="tel"></div>
     </div>
+    <label style="margin-top:14px">Forma de pagamento</label>
+    <div class="pay" id="payList"></div>
+    <div class="hint" id="pixHint"></div>
     <label>Modelo do veículo</label>
     <input id="fModelo" placeholder="Ex: Onix, HB20, Corolla...">
     <label>Placa (opcional)</label>
     <input id="fPlaca" placeholder="ABC-1D23" style="text-transform:uppercase">
     <label>Observação (opcional)</label>
     <textarea id="fObs" rows="2" placeholder="Ex: mancha no banco, suor no teto..."></textarea>
-    <label>Forma de pagamento</label>
-    <div class="pay" id="payList"></div>
-    <div class="hint" id="pixHint"></div>
   </div>
   <div class="btnrow"><button class="btn s" onclick="wBack()">← Voltar</button><button class="btn p" onclick="wGo(4)">Ver resumo →</button></div>
   </div>
@@ -477,8 +477,8 @@ function pickData(v){sel.data=v;sel.hora=null;renderDays();renderSlots();}
 function pickHora(t){sel.hora=t;renderSlots();wGo(3);}
 
 function renderPay(){
-  const ops=[['pix','⚡ PIX'],['dinheiro','💵 Dinheiro'],['cartao','💳 Cartão']];
-  document.getElementById('payList').innerHTML=ops.map(([k,l])=>`<button class="${sel.pag===k?'sel':''}" onclick="sel.pag='${k}';renderPay();resumo()">${l}</button>`).join('');
+  const ops=[['pix','⚡','PIX'],['dinheiro','💵','Dinheiro'],['cartao','💳','Cartão']];
+  document.getElementById('payList').innerHTML=ops.map(([k,em,nm])=>`<button class="${sel.pag===k?'sel':''}" onclick="sel.pag='${k}';renderPay();resumo()"><span style="font-size:22px;display:block;margin-bottom:4px">${em}</span>${nm}${sel.pag===k?'<br><small style="font-size:11px;color:#2e7d32">✅ escolhido</small>':''}</button>`).join('');
   document.getElementById('pixHint').innerHTML=sel.pag==='pix'?'⚡ Pagando no PIX: mostre o comprovante na chegada. Chave: <b>'+esc(DB.cfg.pix)+'</b>':sel.pag==='dinheiro'?'💵 Leve troco se precisar.':'💳 Maquininha disponível no local.';
 }
 
@@ -680,7 +680,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v17 CLIENTE · 11/10 00h15 · sincronização ao vivo';
+const VERSAO='v18 CLIENTE · 11/10 00h30 · pagamento em cima (passo 3)';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
