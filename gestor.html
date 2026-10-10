@@ -286,6 +286,7 @@ td{padding:9px 4px;border-bottom:1px solid #f3e9cf;color:#26201a}
       <span style="font-size:22px">🔄</span>
       <div style="flex:1;font-size:13.5px;font-weight:700;color:#26201a">Nuvem: <span id="cloudStatTop">—</span></div>
       <button class="btn p" id="btnSync" onclick="syncAgora(this)">Atualizar agora</button>
+      <button class="btn g" onclick="testarNotif(this)">🔔 Testar notificação</button>
     </div>
   <div id="gestorLock">
     <div class="card" style="text-align:center;padding:30px 16px">
@@ -594,6 +595,17 @@ function modalIos(){
     <button class="btn p" style="width:100%;margin-top:14px" onclick="this.closest('div[style*=fixed]').remove()">Entendi</button>
   </div>`;
   document.body.appendChild(m);
+}
+async function testarNotif(btn){
+  const t0=btn.textContent;btn.textContent='⏳ Enviando…';btn.disabled=true;
+  try{
+    const msg='Notificação de teste do A.F Car Wash — se você está vendo isso, o celular está recebendo! Ao tocar numa notificação de agendamento, o app do gestor abre.';
+    const url=NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 TESTE — toque aqui')+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car&click='+encodeURIComponent('https://clck.ru/3WRM2N');
+    const r=await fetch(url);
+    if(r.ok){btn.textContent='✅ Enviada! Veja o celular';toast('Notificação enviada — confira o celular do André 📱');}
+    else{btn.textContent='❌ Falhou ('+r.status+')';toast('Falhou: '+r.status,1);}
+  }catch(e){btn.textContent='❌ Sem conexão';toast('Sem conexão com a nuvem',1);}
+  setTimeout(()=>{btn.textContent=t0;btn.disabled=false;},3000);
 }
 async function syncAgora(btn){
   const t0=btn?btn.textContent:'';
@@ -1369,7 +1381,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.4 GESTOR · 10/10 13h25 · relógio de sync honesto + botão sempre responde';;
+const VERSAO='v19.5 GESTOR · 10/10 13h58 · botão 🔔 Testar notificação (chega no celular e abre o gestor)';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
