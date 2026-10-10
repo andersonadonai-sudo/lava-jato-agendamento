@@ -460,7 +460,7 @@ td{padding:9px 4px;border-bottom:1px solid #eee7fa;color:#2b2140}
         <label style="margin-top:10px">Código da loja na nuvem</label>
         <input id="cTopico">
         <button class="btn p" style="margin-top:10px" onclick="ativarNotif()">🔔 Ativar notificações neste navegador</button>
-        <div class="hint"><b>📲 Notificação no celular (app fechado):</b> instale o app gratuito <b>ntfy</b> (Play Store), toque em <b>＋ → Inscrever-se no tópico</b> e digite o Código da loja acima. Cada agendamento novo chega na hora, com som.</div>
+        <div class="hint"><b>📲 Notificação no celular (app fechado):</b> instale o app gratuito <b>ntfy</b> (Play Store / App Store), toque em <b>＋ → Inscrever-se no tópico</b> e digite o Código da loja acima <button class="btn" style="padding:4px 10px;font-size:12px;margin:4px 0" onclick="copiarTopico()">📋 copiar código</button>. Cada agendamento novo chega na hora, com som — mesmo com o app A.F fechado.</div>
       </div>
     </div>
   </div>
@@ -558,8 +558,41 @@ function notifyNovo(o){
   if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:msg})}catch(e){}}
 }
 function ativarNotif(){
-  if(!('Notification'in window))return toast('Navegador sem suporte a notificações',1);
-  Notification.requestPermission().then(p=>{toast(p==='granted'?'Notificações ativadas 🔔':'Permissão negada no navegador',p==='granted'?0:1);notifBarUpd();});
+  if(!('Notification'in window)){
+    const ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    const standalone=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;
+    if(ios&&!standalone)return modalIos();
+    return toast('Este navegador não suporta notificações — instale o app ntfy no celular (instruções no card ☁️ da nuvem)',1,6000);
+  }
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){toast('Notificações ativadas 🔔');}
+    else if(p==='denied'){toast('Permissão negada — libere nas Configurações do iPad (Safari → Notificações)',1,6000);}
+    else{toast('Toque em Permitir quando o navegador perguntar',1,5000);}
+    notifBarUpd();
+  });
+}
+function modalIos(){
+  const m=document.createElement('div');
+  m.style.cssText='position:fixed;inset:0;background:rgba(10,5,20,.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+  m.innerHTML=`<div style="background:#1a1226;border:1px solid #7c3aed;border-radius:20px;max-width:420px;width:100%;padding:24px;color:#fff;font-family:inherit">
+    <div style="font-size:34px;text-align:center">📲</div>
+    <h3 style="margin:10px 0 14px;text-align:center;font-size:18px">No iPad, as notificações exigem 1 passo extra</h3>
+    <ol style="font-size:14.5px;line-height:1.7;padding-left:20px;color:#e8e0f5">
+      <li>No <b>Safari</b>, toque no botão <b>Compartilhar</b> <span style="background:#333;border-radius:6px;padding:2px 8px">⬆︎</span> (barra de baixo)</li>
+      <li>Toque em <b>“Adicionar à Tela de Início”</b></li>
+      <li>Confirme em <b>Adicionar</b></li>
+      <li>Abra o app <b>A.F Car Wash</b> que apareceu na sua tela inicial</li>
+      <li>Toque em <b>🔔 Ativar</b> de novo — agora vai funcionar ✅</li>
+    </ol>
+    <p style="font-size:12.5px;color:#b9a8d8;margin:12px 0 0">O Safari normal do iPad bloqueia notificações de sites; instalado na Tela de Início, o app ganha permissão própria.</p>
+    <button class="btn p" style="width:100%;margin-top:14px" onclick="this.closest('div[style*=fixed]').remove()">Entendi</button>
+  </div>`;
+  document.body.appendChild(m);
+}
+function copiarTopico(){
+  const t=topNot();
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>toast('Tópico copiado 📋')).catch(()=>toast('Tópico: '+t,0,6000));}
+  else toast('Tópico: '+t,0,6000);
 }
 function notifBarUpd(){const b=document.getElementById('notifBar');if(!b)return;b.style.display=('Notification'in window&&Notification.permission==='granted')?'none':'flex';}
 function cloudStat(){const el=document.getElementById('cloudStat');if(el)el.textContent=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';}
@@ -1307,7 +1340,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v18 GESTOR · 11/10 10h45 · sync ao vivo corrigido + notificação em destaque';
+const VERSAO='v19 GESTOR · 11/10 11h20 · notificação no iPad (instalar na Tela de Início) + guia ntfy';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
