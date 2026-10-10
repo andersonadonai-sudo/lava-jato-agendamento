@@ -229,7 +229,7 @@ td{padding:9px 4px;border-bottom:1px solid #f3e9cf;color:#26201a}
     <h3>3. Seus dados</h3>
     <div class="row">
       <div><label>Nome</label><input id="fNome" placeholder="Seu nome"></div>
-      <div><label>WhatsApp</label><input id="fFone" placeholder="(33) 99999-9999" inputmode="tel"></div>
+      <div><label>WhatsApp</label><input id="fFone" placeholder="(33) 99999-9999" inputmode="tel" oninput="maskFone(this)"></div>
     </div>
     <label style="margin-top:14px">Forma de pagamento</label>
     <div class="pay" id="payList"></div>
@@ -509,6 +509,13 @@ function resumo(){
 }
 function prevFim(hora,dur){const m=hm2m(hora)+dur;return hm(m>=1440?1439:m)+(m>=1440?' (dia seguinte)':'')+' aprox.'}
 
+function maskFone(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>7)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+  else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);
+  else if(v.length>0)v='('+v;
+  el.value=v;
+}
 function confirmar(){
   const s=DB.svc.find(x=>x.id===sel.svc);
   const nome=document.getElementById('fNome').value.trim();
@@ -520,7 +527,7 @@ function confirmar(){
   if(!sel.data)return toast('Escolha a data',1);
   if(!sel.hora)return toast('Escolha o horário',1);
   if(!nome)return toast('Digite seu nome',1);
-  if(fo.replace(/\D/g,'').length<10)return toast('WhatsApp inválido',1);
+  if(fo.replace(/\D/g,'').length<8)return toast('WhatsApp inválido — digite com DDD: (33) 99999-9999',1);
   if(!sel.pag)return toast('Escolha a forma de pagamento',1);
   const q=DB.orders.filter(o=>o.data===sel.data&&o.hora===sel.hora&&!['cancelado'].includes(o.status)).length;
   if(q>=(+DB.cfg.vagas||1))return toast('Este horário acabou de encher — escolha outro',1);
@@ -686,7 +693,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.1 CLIENTE · 11/10 11h50 · envio imediato pra nuvem + notificação abre o gestor';;
+const VERSAO='v19.2 CLIENTE · 11/10 11h58 · WhatsApp aceita sem DDD + máscara automática';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
