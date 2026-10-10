@@ -306,6 +306,23 @@ async function pubDB(){
     await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
   }catch(e){}
 }
+let esDB=null;
+function startLive(){
+  if(esDB||!('EventSource'in window))return;
+  try{
+    esDB=new EventSource(NTFY+'/'+topDB()+'/sse?since=all');
+    esDB.onmessage=e=>{
+      try{
+        const ev=JSON.parse(e.data);
+        if(!ev||ev.title!=='db'||!ev.message)return;
+        const b=JSON.parse(ev.message);
+        if(b&&b.t)mergeBlob(b);
+      }catch(err){}
+    };
+    esDB.onerror=()=>{};
+  }catch(err){}
+}
+
 async function pullDB(){
   try{
     const r=await fetch(NTFY+'/'+topDB()+'/json?poll=1&since=12h',{cache:'no-store'});
@@ -331,7 +348,7 @@ function mergeBlob(b){
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
     if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
     DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();
-    toast('☁️ Atualizado da nuvem');
+    try{if(!document.getElementById('pg-meus').classList.contains('hidden')&&meuFone)meusBuscar();if(!document.getElementById('pg-agendar').classList.contains('hidden')&&sel.data){renderSlots();renderDays();}}catch(e){}
   }finally{noPub=false}
 }
 function notifyNovo(o){
@@ -663,7 +680,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v16 CLIENTE · 10/10 23h55 · PIX confirmado pela loja';
+const VERSAO='v17 CLIENTE · 11/10 00h15 · sincronização ao vivo';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -677,7 +694,8 @@ sel.data=hoje();
 go('home');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
-setInterval(()=>{if(!document.hidden)pullDB()},30000);
+setInterval(()=>{if(!document.hidden)pullDB()},10000);
+startLive();
 </script>
 </body>
 </html>

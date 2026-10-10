@@ -492,6 +492,23 @@ async function pubDB(){
     await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
   }catch(e){}
 }
+let esDB=null;
+function startLive(){
+  if(esDB||!('EventSource'in window))return;
+  try{
+    esDB=new EventSource(NTFY+'/'+topDB()+'/sse?since=all');
+    esDB.onmessage=e=>{
+      try{
+        const ev=JSON.parse(e.data);
+        if(!ev||ev.title!=='db'||!ev.message)return;
+        const b=JSON.parse(ev.message);
+        if(b&&b.t)mergeBlob(b);
+      }catch(err){}
+    };
+    esDB.onerror=()=>{};
+  }catch(err){}
+}
+
 async function pullDB(){
   try{
     const r=await fetch(NTFY+'/'+topDB()+'/json?poll=1&since=12h',{cache:'no-store'});
@@ -1274,7 +1291,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v16 GESTOR · 10/10 23h55 · confirmar PIX do cliente';
+const VERSAO='v17 GESTOR · 11/10 00h15 · sincronização ao vivo';
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1289,7 +1306,8 @@ sel.data=hoje();
 go('gestor');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
-setInterval(()=>{if(gestor&&!document.hidden)pullDB()},30000);
+setInterval(()=>{if(gestor&&!document.hidden)pullDB()},10000);
+startLive();
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();}
 </script>
 </body>
