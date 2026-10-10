@@ -1345,7 +1345,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.1 GESTOR · 11/10 11h50 · abrir o app atualiza na hora + botão Atualizar agora';;
+const VERSAO='v19.3 GESTOR · 10/10 13h10 · pull 6s + pulso de nuvem + notificação reforçada';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1360,8 +1360,8 @@ sel.data=hoje();
 go('gestor');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
-setInterval(()=>{if(gestor&&!document.hidden)pullDB()},10000);setInterval(()=>{if(gestor&&document.hidden)pullDB()},14000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gestor){pullDB();cloudStat();}});
+setInterval(()=>{if(gestor&&!document.hidden)pullDB()},6000);setInterval(()=>{if(gestor&&document.hidden)pullDB()},14000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gestor){pullDB();cloudStat();if(Date.now()-(DB.cloudT||0)>120000)pubDB();}});
 startLive();
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();notifBarUpd();}
 </script>
