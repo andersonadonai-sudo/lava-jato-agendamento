@@ -300,7 +300,7 @@ const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-m8t3v7r2';
 let noPub=false,pubTimer=null;
 const topDB=()=>(DB.cfg.topico||TOP_PADRAO)+'-db';
 const topNot=()=>(DB.cfg.topico||TOP_PADRAO);
-function agendarPub(){if(Date.now()<(window.__pullGuard||0))return;if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
+function agendarPub(){if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
 async function pubDB(){
   try{
     const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
@@ -325,7 +325,7 @@ function startLive(){
         if(b&&b.t)mergeBlob(b);
       }catch(err){}
     };
-    esDB.onerror=()=>{};
+    esDB.onerror=()=>{try{esDB.close()}catch(e){}esDB=null;setTimeout(startLive,4000);};
   }catch(err){}
 }
 
@@ -359,7 +359,7 @@ function mergeBlob(b){
 }
 function notifyNovo(o){
   const msg=o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)+' ('+o.pag+') | Cliente: '+o.nome+' · 📞 '+o.fone;
-  fetch(NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 '+o.cd+' — '+o.nome)+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car').catch(()=>{});
+  fetch(NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 '+o.cd+' — '+o.nome)+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car&click='+encodeURIComponent('https://clck.ru/3WRFha')).catch(()=>{});
   if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:msg})}catch(e){}}
 }
 function ativarNotif(){
@@ -529,7 +529,7 @@ function confirmar(){
   DB.orders.push(novo);
   save();
   localStorage.setItem('lj_fone',fo);
-  notifyNovo(novo);
+  notifyNovo(novo);pubDB();
   sel={svc:null,data:null,hora:null,pag:null};
   document.getElementById('fNome').value='';document.getElementById('fModelo').value='';document.getElementById('fPlaca').value='';document.getElementById('fObs').value='';
   renderSvcs();renderDays();renderSlots();renderPay();resumo();
@@ -686,7 +686,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19 CLIENTE · 11/10 11h40 · dourado metálico + preto';;
+const VERSAO='v19.1 CLIENTE · 11/10 11h50 · envio imediato pra nuvem + notificação abre o gestor';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -702,6 +702,7 @@ pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(!document.hidden)pullDB()},10000);
 startLive();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pullDB();});
 </script>
 </body>
 </html>

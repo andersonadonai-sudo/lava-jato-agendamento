@@ -282,6 +282,11 @@ td{padding:9px 4px;border-bottom:1px solid #f3e9cf;color:#26201a}
       <div style="flex:1;font-size:13.5px;font-weight:700;color:#7a4d00">Ative as notificações para receber cada agendamento na hora</div>
       <button class="btn g" onclick="ativarNotif()">Ativar</button>
     </div>
+    <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 14px;margin:0 14px 12px">
+      <span style="font-size:22px">🔄</span>
+      <div style="flex:1;font-size:13.5px;font-weight:700;color:#26201a">Nuvem: <span id="cloudStatTop">—</span></div>
+      <button class="btn p" onclick="pullDB().then(()=>{cloudStat();toast('✅ Sincronizado com a nuvem')})">Atualizar agora</button>
+    </div>
   <div id="gestorLock">
     <div class="card" style="text-align:center;padding:30px 16px">
       <div style="font-size:40px">🔐</div>
@@ -489,7 +494,7 @@ const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-m8t3v7r2';
 let noPub=false,pubTimer=null;
 const topDB=()=>(DB.cfg.topico||TOP_PADRAO)+'-db';
 const topNot=()=>(DB.cfg.topico||TOP_PADRAO);
-function agendarPub(){if(Date.now()<(window.__pullGuard||0))return;if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
+function agendarPub(){if(pubTimer)return;pubTimer=setTimeout(()=>{pubTimer=null;pubDB()},2500);}
 async function pubDB(){
   try{
     const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
@@ -514,7 +519,7 @@ function startLive(){
         if(b&&b.t)mergeBlob(b);
       }catch(err){}
     };
-    esDB.onerror=()=>{};
+    esDB.onerror=()=>{try{esDB.close()}catch(e){}esDB=null;setTimeout(startLive,4000);};
   }catch(err){}
 }
 
@@ -544,10 +549,10 @@ function mergeBlob(b){
     DB.seq=Math.max(DB.seq||1,b.seq||1);
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
     if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
-    DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();
+    DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();cloudStat();
     if(gestor){renderGestor();if(!document.hidden)toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
     novos.forEach(o=>{
-      if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)})}catch(e){}}
+      if('Notification'in window&&Notification.permission==='granted'){try{const nt=new Notification('🔔 '+o.cd+' — '+o.nome,{body:o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)});nt.onclick=()=>{window.focus();try{go('gestor')}catch(e){}}}catch(e){}}
       if('vibrate'in navigator)navigator.vibrate([200,100,200]);
     });
   }finally{noPub=false}
@@ -595,7 +600,7 @@ function copiarTopico(){
   else toast('Tópico: '+t,0,6000);
 }
 function notifBarUpd(){const b=document.getElementById('notifBar');if(!b)return;b.style.display=('Notification'in window&&Notification.permission==='granted')?'none':'flex';}
-function cloudStat(){const el=document.getElementById('cloudStat');if(el)el.textContent=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';}
+function cloudStat(){const tx=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';const el=document.getElementById('cloudStat');if(el)el.textContent=tx;const t2=document.getElementById('cloudStatTop');if(t2)t2.textContent=tx;}
 
 function seed(){
   return {
@@ -1340,7 +1345,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19 GESTOR · 11/10 11h40 · dourado metálico + preto';;
+const VERSAO='v19.1 GESTOR · 11/10 11h50 · abrir o app atualiza na hora + botão Atualizar agora';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1356,6 +1361,7 @@ go('gestor');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(gestor&&!document.hidden)pullDB()},10000);setInterval(()=>{if(gestor&&document.hidden)pullDB()},14000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gestor){pullDB();cloudStat();}});
 startLive();
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();notifBarUpd();}
 </script>
