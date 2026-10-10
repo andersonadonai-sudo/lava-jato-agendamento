@@ -285,7 +285,7 @@ td{padding:9px 4px;border-bottom:1px solid #f3e9cf;color:#26201a}
     <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 14px;margin:0 14px 12px">
       <span style="font-size:22px">🔄</span>
       <div style="flex:1;font-size:13.5px;font-weight:700;color:#26201a">Nuvem: <span id="cloudStatTop">—</span></div>
-      <button class="btn p" onclick="pullDB().then(()=>{cloudStat();toast('✅ Sincronizado com a nuvem')})">Atualizar agora</button>
+      <button class="btn p" id="btnSync" onclick="syncAgora(this)">Atualizar agora</button>
     </div>
   <div id="gestorLock">
     <div class="card" style="text-align:center;padding:30px 16px">
@@ -525,8 +525,9 @@ function startLive(){
 
 async function pullDB(){
   try{
+    DB.checkAt=Date.now();cloudStat();
     const r=await fetch(NTFY+'/'+topDB()+'/json?poll=1&since=12h',{cache:'no-store'});
-    if(!r.ok)return;
+    if(!r.ok){cloudStat();return;}
     const txt=await r.text();let best=null;
     for(const line of txt.split('\n')){
       if(!line.trim())continue;let ev;try{ev=JSON.parse(line)}catch(e){continue}
@@ -535,8 +536,8 @@ async function pullDB(){
       if((!b||!b.t)&&ev.attachment&&ev.attachment.url){try{b=await(await fetch(ev.attachment.url)).json()}catch(e){}}
       if(b&&b.t&&(!best||b.t>best.t))best=b;
     }
-    if(best)mergeBlob(best);
-  }catch(e){}
+    if(best)mergeBlob(best);else cloudStat();
+  }catch(e){cloudStat()}
 }
 function mergeBlob(b){
   if(!b||b.t<=(DB.cloudT||0))return;
@@ -594,13 +595,36 @@ function modalIos(){
   </div>`;
   document.body.appendChild(m);
 }
+async function syncAgora(btn){
+  const t0=btn?btn.textContent:'';
+  if(btn){btn.textContent='⏳ Atualizando…';btn.disabled=true;}
+  try{
+    await pullDB();
+    cloudStat();
+    const n=(DB.orders||[]).length;
+    if(btn){btn.textContent='✅ Atualizado ('+n+' agenda'+(n===1?'':'s')+')';}
+    else toast('✅ Sincronizado — '+n+' agendamento(s)');
+  }catch(e){
+    if(btn)btn.textContent='❌ Sem conexão';
+    else toast('❌ Falha na conexão com a nuvem',1);
+  }finally{
+    setTimeout(()=>{if(btn){btn.textContent=t0;btn.disabled=false;}},2500);
+  }
+}
 function copiarTopico(){
   const t=topNot();
   if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>toast('Tópico copiado 📋')).catch(()=>toast('Tópico: '+t,0,6000));}
   else toast('Tópico: '+t,0,6000);
 }
 function notifBarUpd(){const b=document.getElementById('notifBar');if(!b)return;b.style.display=('Notification'in window&&Notification.permission==='granted')?'none':'flex';}
-function cloudStat(){const tx=DB.cloudAt?('última sync '+new Date(DB.cloudAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})):'aguardando 1a sync';const el=document.getElementById('cloudStat');if(el)el.textContent=tx;const t2=document.getElementById('cloudStatTop');if(t2)t2.textContent=tx;}
+function cloudStat(){
+  const hm=d=>d?new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):null;
+  const verif=DB.checkAt?('verificado '+hm(DB.checkAt)):'verificando…';
+  const dados=DB.cloudAt?('· dados de '+hm(DB.cloudAt)):'';
+  const tx=dados?(verif+' · '+dados):(verif+' · tudo em dia');
+  const el=document.getElementById('cloudStat');if(el)el.textContent=tx;
+  const t2=document.getElementById('cloudStatTop');if(t2)t2.textContent=tx;
+}
 
 function seed(){
   return {
@@ -1345,7 +1369,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.3 GESTOR · 10/10 13h10 · pull 6s + pulso de nuvem + notificação reforçada';;
+const VERSAO='v19.4 GESTOR · 10/10 13h25 · relógio de sync honesto + botão sempre responde';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
