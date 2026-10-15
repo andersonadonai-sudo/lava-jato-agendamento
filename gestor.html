@@ -491,7 +491,7 @@ const fone=()=>localStorage.getItem('lj_fone')||'';
 const chkPin=v=>{const i=(DB.cfg.pins||[]).indexOf(v);return i<0?null:((DB.cfg.nomes||{})[v]||'Gestor')};
 
 /* ============ NUVEM (ntfy.sh) ============ */
-const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-m8t3v7r2';
+const NTFY='https://ntfy.sh',TOP_PADRAO='afcarwash-8ee4674a';
 let noPub=false,pubTimer=null;
 const topDB=()=>(DB.cfg.topico||TOP_PADRAO)+'-db';
 const topNot=()=>(DB.cfg.topico||TOP_PADRAO);
@@ -657,7 +657,8 @@ function seed(){
     orders:[], pay:[], desp:[], seq:1
   };
 }
-function load(){try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined||!DB.cfg.hero)DB.cfg.hero=HERO_PADRAO;if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';if(!DB.cfg.pins){const p0=DB.cfg.pin||'1234';DB.cfg.pins=[p0,'4321'];DB.cfg.nomes={};DB.cfg.nomes[p0]=DB.cfg.gestorNome||'André';DB.cfg.nomes['4321']='Lysa';delete DB.cfg.pin;}if(DB.cfg.meta===undefined)DB.cfg.meta=3000;save();}
+function load(){
+  try{const _raw=JSON.parse(localStorage.getItem(LSK)||'{}');if(_raw.cfg&&_raw.cfg.topico==='afcarwash-m8t3v7r2')_raw.cfg.topico=undefined;localStorage.setItem(LSK,JSON.stringify(_raw));}catch(e){}try{DB=JSON.parse(localStorage.getItem(LSK))}catch(e){}if(!DB||!DB.cfg)DB=seed();if(!DB.desp)DB.desp=[];if(!DB.pay)DB.pay=[];if(+DB.cfg.int===30&&+DB.cfg.vagas===2){DB.cfg.int=140;DB.cfg.vagas=1;}if(DB.cfg.abre==='07:00')DB.cfg.abre='08:00';if(DB.cfg.fecha==='18:00')DB.cfg.fecha='17:00';if(DB.svc[0]&&DB.svc[0].preco===40)DB.svc[0].preco=60;if(DB.svc[1]&&DB.svc[1].preco===70&&DB.svc[1].id==='det'){DB.svc[1].preco=80;DB.svc[1].nome='Lavagem com Cera Protetora';DB.svc[1].desc='Lavagem completa + aplicação de cera protetora: brilho duradouro e proteção da pintura.';}if(DB.cfg.logo===undefined)DB.cfg.logo='';if(DB.cfg.rosto===undefined)DB.cfg.rosto='';if(DB.cfg.hero===undefined||!DB.cfg.hero)DB.cfg.hero=HERO_PADRAO;if(!DB.cfg.gestorNome)DB.cfg.gestorNome='André';if(!DB.cfg.pins){const p0=DB.cfg.pin||'1234';DB.cfg.pins=[p0,'4321'];DB.cfg.nomes={};DB.cfg.nomes[p0]=DB.cfg.gestorNome||'André';DB.cfg.nomes['4321']='Lysa';delete DB.cfg.pin;}if(DB.cfg.meta===undefined)DB.cfg.meta=3000;save();}
 function save(){localStorage.setItem(LSK,JSON.stringify(DB));if(!noPub&&DB&&DB.cfg)agendarPub();}
 function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
 
@@ -1381,7 +1382,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.5 GESTOR · 10/10 13h58 · botão 🔔 Testar notificação (chega no celular e abre o gestor)';;
+const VERSAO='v19.6 GESTOR · 10/10 19h15 · nuvem nova (tópico renovado) + teste de notificação';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
