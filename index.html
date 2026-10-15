@@ -694,7 +694,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.6.1 CLIENTE · 10/10 19h30 · proteção anti-sobrescrita + notificação abre gestor';;
+const VERSAO='v19.7 CLIENTE · 10/10 19h40 · notificação abre o gestor (link permanente)';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -710,7 +710,7 @@ pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(!document.hidden)pullDB()},10000);
 startLive();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(DB.cloudT&&Date.now()-DB.cloudT>120000)pubDB();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(Date.now()-(DB.cloudT||0)>120000)pubDB();}});
 </script>
 </body>
 </html>
