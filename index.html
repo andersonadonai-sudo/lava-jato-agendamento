@@ -359,7 +359,7 @@ function mergeBlob(b){
 }
 function notifyNovo(o){
   const msg=o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)+' ('+o.pag+') | Cliente: '+o.nome+' · 📞 '+o.fone;
-  (function(){const url=NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 '+o.cd+' — '+o.nome)+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car&click='+encodeURIComponent('https://clck.ru/3WRGfD');[0,3000,8000].forEach(d=>setTimeout(()=>fetch(url).catch(()=>{}),d));})();
+  (function(){const url=NTFY+'/'+topNot()+'/publish?title='+encodeURIComponent('🔔 '+o.cd+' — '+o.nome)+'&message='+encodeURIComponent(msg)+'&priority=4&tags=car&click='+encodeURIComponent('https://clck.ru/3WRM2N');[0,3000,8000].forEach(d=>setTimeout(()=>fetch(url).catch(()=>{}),d));})();
   if('Notification'in window&&Notification.permission==='granted'){try{new Notification('🔔 '+o.cd+' — '+o.nome,{body:msg})}catch(e){}}
 }
 function ativarNotif(){
@@ -694,7 +694,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.6 CLIENTE · 10/10 19h15 · nuvem nova (tópico renovado)';;
+const VERSAO='v19.6.1 CLIENTE · 10/10 19h30 · proteção anti-sobrescrita + notificação abre gestor';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -710,7 +710,7 @@ pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(!document.hidden)pullDB()},10000);
 startLive();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(Date.now()-(DB.cloudT||0)>120000)pubDB();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(DB.cloudT&&Date.now()-DB.cloudT>120000)pubDB();}});
 </script>
 </body>
 </html>
