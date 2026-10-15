@@ -305,7 +305,12 @@ async function pubDB(){
   try{
     const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
     DB.cloudT=blob.t;noPub=true;save();noPub=false;
-    const _body=JSON.stringify(blob);if(_body.length<3800){await fetch(NTFY+'/'+topDB()+'/publish?title=db',{method:'POST',body:_body});}else{await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:_body});}
+    const _body=JSON.stringify(blob);
+    const _send=(n)=>{
+      const _url=_body.length<3800?(NTFY+'/'+topDB()+'/publish?title=db'):(NTFY+'/'+topDB()+'?filename=db.json&title=db');
+      fetch(_url,{method:'POST',body:_body}).then(r=>{if(!r.ok&&n<2)setTimeout(()=>_send(n+1),3000)}).catch(()=>{if(n<2)setTimeout(()=>_send(n+1),3000)});
+    };
+    _send(0);
   }catch(e){}
 }
 let esDB=null;
@@ -331,18 +336,22 @@ function startLive(){
 
 async function pullDB(){
   try{
+    DB.checkAt=Date.now();cloudStat();
     const r=await fetch(NTFY+'/'+topDB()+'/json?poll=1&since=12h',{cache:'no-store'});
-    if(!r.ok)return;
-    const txt=await r.text();let best=null;
+    if(!r.ok){cloudStat();return;}
+    const txt=await r.text();
+    const blobs=[];
+    window.__attCache=window.__attCache||{};
     for(const line of txt.split('\n')){
       if(!line.trim())continue;let ev;try{ev=JSON.parse(line)}catch(e){continue}
       if(!ev||ev.title!=='db')continue;let b=null;
       if(ev.message){try{b=JSON.parse(ev.message)}catch(e){}}
-      if((!b||!b.t)&&ev.attachment&&ev.attachment.url){try{b=await(await fetch(ev.attachment.url)).json()}catch(e){}}
-      if(b&&b.t&&(!best||b.t>best.t))best=b;
+      if((!b||!b.t)&&ev.attachment&&ev.attachment.url&&!window.__attCache[ev.attachment.url]){try{b=await(await fetch(ev.attachment.url)).json();window.__attCache[ev.attachment.url]=1}catch(e){}}
+      if(b&&b.t)blobs.push(b);
     }
-    if(best)mergeBlob(best);
-  }catch(e){}
+    blobs.sort((a,b)=>a.t-b.t);
+    if(blobs.length){for(const b of blobs)mergeBlob(b);}else cloudStat();
+  }catch(e){cloudStat()}
 }
 function mergeBlob(b){
   if(!b||!b.t)return;const _stale=b.t<=(DB.cloudT||0);
@@ -694,7 +703,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.7 CLIENTE · 10/10 19h40 · nuvem à prova de falhas (inline + anti-corrida)';;
+const VERSAO='v19.8 CLIENTE · 10/10 20h50 · sync à prova de corrida (une todos os dados da nuvem)';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
