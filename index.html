@@ -305,7 +305,7 @@ async function pubDB(){
   try{
     const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
     DB.cloudT=blob.t;noPub=true;save();noPub=false;
-    await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
+    const _body=JSON.stringify(blob);if(_body.length<3800){await fetch(NTFY+'/'+topDB()+'/publish?title=db',{method:'POST',body:_body});}else{await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:_body});}
   }catch(e){}
 }
 let esDB=null;
@@ -345,7 +345,7 @@ async function pullDB(){
   }catch(e){}
 }
 function mergeBlob(b){
-  if(!b||b.t<=(DB.cloudT||0))return;
+  if(!b||!b.t)return;const _stale=b.t<=(DB.cloudT||0);
   noPub=true;
   try{
     const un=(arr,key)=>{const m={};(DB[key]||[]).forEach(x=>m[x.id]=x);(arr||[]).forEach(x=>{const c=m[x.id];if(!c||(x.criado||x.id||0)>(c.criado||c.id||0))m[x.id]=x});DB[key]=Object.values(m)};
@@ -353,7 +353,7 @@ function mergeBlob(b){
     DB.seq=Math.max(DB.seq||1,b.seq||1);
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
     if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
-    DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();
+    if(!_stale){DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;}save();
     try{if(!document.getElementById('pg-meus').classList.contains('hidden')&&meuFone)meusBuscar();if(!document.getElementById('pg-agendar').classList.contains('hidden')&&sel.data){renderSlots();renderDays();}}catch(e){}
   }finally{noPub=false}
 }
@@ -694,7 +694,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.7 CLIENTE · 10/10 19h40 · notificação abre o gestor (link permanente)';;
+const VERSAO='v19.7 CLIENTE · 10/10 19h40 · nuvem à prova de falhas (inline + anti-corrida)';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -710,7 +710,7 @@ pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(!document.hidden)pullDB()},10000);
 startLive();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(Date.now()-(DB.cloudT||0)>120000)pubDB();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){pullDB();if(DB.cloudT&&Date.now()-DB.cloudT>120000)pubDB();}});
 </script>
 </body>
 </html>

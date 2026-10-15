@@ -500,7 +500,7 @@ async function pubDB(){
   try{
     const blob={t:Date.now(),who:gestor?(gestorAtual||'gestor'):'cliente',seq:DB.seq||1,orders:DB.orders||[],pay:DB.pay||[],desp:DB.desp||[],cfg:gestor?{nome:DB.cfg.nome,abre:DB.cfg.abre,fecha:DB.cfg.fecha,int:DB.cfg.int,vagas:DB.cfg.vagas,almocoI:DB.cfg.almocoI,almocoF:DB.cfg.almocoF,fechados:DB.cfg.fechados,pix:DB.cfg.pix,wapp:DB.cfg.wapp,meta:DB.cfg.meta,pins:DB.cfg.pins,nomes:DB.cfg.nomes,gestorNome:DB.cfg.gestorNome,topico:DB.cfg.topico}:undefined};
     DB.cloudT=blob.t;noPub=true;save();noPub=false;
-    await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:JSON.stringify(blob)});
+    const _body=JSON.stringify(blob);if(_body.length<3800){await fetch(NTFY+'/'+topDB()+'/publish?title=db',{method:'POST',body:_body});}else{await fetch(NTFY+'/'+topDB()+'?filename=db.json&title=db',{method:'POST',body:_body});}
   }catch(e){}
 }
 let esDB=null;
@@ -541,7 +541,7 @@ async function pullDB(){
   }catch(e){cloudStat()}
 }
 function mergeBlob(b){
-  if(!b||b.t<=(DB.cloudT||0))return;
+  if(!b||!b.t)return;const _stale=b.t<=(DB.cloudT||0);
   noPub=true;
   try{
     const antes=new Set((DB.orders||[]).map(x=>x.id));
@@ -551,8 +551,8 @@ function mergeBlob(b){
     DB.seq=Math.max(DB.seq||1,b.seq||1);
     const keep={logo:DB.cfg.logo,rosto:DB.cfg.rosto,hero:DB.cfg.hero};
     if(b.who==='gestor')Object.assign(DB.cfg,b.cfg||{},keep);
-    DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;save();cloudStat();
-    if(gestor){renderGestor();if(!document.hidden)toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
+    if(!_stale){DB.cloudT=b.t;DB.cloudAt=Date.now();window.__pullGuard=Date.now()+8000;}save();cloudStat();
+    if(gestor&&(!_stale||novos.length)){renderGestor();if(!document.hidden&&!_stale)toast('☁️ Atualizado da nuvem — '+(DB.orders||[]).length+' agendamento(s)');}
     novos.forEach(o=>{
       if('Notification'in window&&Notification.permission==='granted'){try{const nt=new Notification('🔔 '+o.cd+' — '+o.nome,{body:o.svcNome+' — '+fmtBR(o.data)+' às '+o.hora+' — '+brl(o.preco)});nt.onclick=()=>{window.focus();try{go('gestor')}catch(e){}}}catch(e){}}
       if('vibrate'in navigator)navigator.vibrate([200,100,200]);
@@ -1382,7 +1382,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.6 GESTOR · 10/10 19h15 · nuvem nova (tópico renovado) + teste de notificação';;
+const VERSAO='v19.7 GESTOR · 10/10 19h40 · nuvem à prova de falhas (inline + anti-corrida)';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
@@ -1398,7 +1398,7 @@ go('gestor');
 pullDB();
 setInterval(()=>{if(!document.hidden&&!document.getElementById('pg-home').classList.contains('hidden'))liveHome();},60000);
 setInterval(()=>{if(gestor&&!document.hidden)pullDB()},6000);setInterval(()=>{if(gestor&&document.hidden)pullDB()},14000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gestor){pullDB();cloudStat();if(Date.now()-(DB.cloudT||0)>120000)pubDB();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gestor){pullDB();cloudStat();if(DB.cloudT&&Date.now()-DB.cloudT>120000)pubDB();}});
 startLive();
 if(sessionStorage.getItem('lj_gestor')==='1'){gestor=true;gestorAtual=sessionStorage.getItem('lj_gu')||DB.cfg.gestorNome||'André';document.getElementById('navGestor').classList.remove('hidden');document.getElementById('gestorLock').classList.add('hidden');document.getElementById('gestorPanel').classList.remove('hidden');renderGestor();notifBarUpd();}
 </script>
