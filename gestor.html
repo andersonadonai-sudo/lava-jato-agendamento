@@ -153,6 +153,41 @@ td{padding:9px 4px;border-bottom:1px solid #f3e9cf;color:#26201a}
 .ic svg{width:23px;height:23px;display:block}
 .ic{display:flex;align-items:center;justify-content:center}
 .novos{color:#c9a227;font-weight:800}
+
+/* ============ v19.9 PRO DESIGN ============ */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap');
+*{font-family:'Sora',-apple-system,'Segoe UI',Roboto,sans-serif !important;-webkit-font-smoothing:antialiased}
+body{background:linear-gradient(180deg,#faf7f0 0%,#f3ecdc 50%,#efe6d0 100%) !important;color:#241d12 !important}
+h1,h2,h3,.nm,.kpi b{letter-spacing:-.02em}
+header{background:linear-gradient(135deg,rgba(12,10,6,.96),rgba(30,24,14,.9)) !important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,175,55,.4) !important;box-shadow:0 10px 40px rgba(0,0,0,.35) !important}
+header .t,header b{letter-spacing:.06em}
+.card{background:#fffdf8 !important;border:1px solid rgba(212,175,55,.28) !important;border-radius:22px !important;box-shadow:0 4px 14px rgba(60,45,10,.06),0 14px 40px rgba(60,45,10,.08) !important}
+.card h3{font-weight:800 !important;display:flex;align-items:center;gap:8px}
+.btn{border-radius:16px !important;font-weight:700 !important;transition:transform .12s ease,box-shadow .2s ease !important}
+.btn:active{transform:scale(.97)}
+.btn.p{background:linear-gradient(120deg,#7a5e12 0%,#d4af37 38%,#f7e59a 52%,#d4af37 66%,#8a6d1a 100%) !important;color:#1c1506 !important;box-shadow:0 6px 24px rgba(154,125,10,.45),0 2px 6px rgba(154,125,10,.3) !important;font-weight:800 !important}
+.btn.p::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);animation:shine 3.4s infinite}
+@keyframes shine{0%{left:-70%}55%{left:140%}100%{left:140%}}
+.btn.g{background:linear-gradient(135deg,#1d9040,#2e7d32) !important;box-shadow:0 6px 20px rgba(46,125,50,.35) !important}
+.btn.s{background:#fffdf8 !important;color:#8a6d1a !important;border:1.5px solid rgba(212,175,55,.55) !important}
+input,select,textarea{background:#fffdf8 !important;border:1.5px solid #e6d9b8 !important;border-radius:14px !important;padding:13px 14px !important;transition:border-color .2s,box-shadow .2s !important}
+input:focus,select:focus,textarea:focus{border-color:#d4af37 !important;box-shadow:0 0 0 4px rgba(212,175,55,.15) !important;outline:none !important}
+nav{background:rgba(255,253,248,.92) !important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(212,175,55,.25) !important;box-shadow:0 -8px 30px rgba(0,0,0,.08) !important}
+nav button.on{color:#8a6d1a !important;font-weight:800 !important}
+.svc,.slot,.day{border-radius:18px !important;transition:all .15s ease !important}
+.svc.sel,.slot.sel,.day.sel{border-color:#d4af37 !important;background:linear-gradient(135deg,#fdf6dd,#f7ecd0) !important;box-shadow:0 0 0 3px rgba(212,175,55,.18),0 6px 18px rgba(154,125,10,.12) !important}
+.prog{border-radius:30px !important;background:#efe6d0 !important}
+.prog .fill{background:linear-gradient(90deg,#8a6d1a,#d4af37,#f0d878) !important;border-radius:30px !important}
+.kpi{border-radius:20px !important}
+.kpi b{font-size:26px !important;background:linear-gradient(120deg,#8a6d1a,#d4af37);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+table{border-radius:14px;overflow:hidden}
+th{background:linear-gradient(135deg,#14100a,#262014) !important;color:#d4af37 !important;font-weight:700 !important}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,.4);border-radius:10px}
+.pager{animation:pagein .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes pagein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.toast{border-radius:16px !important;backdrop-filter:blur(10px);box-shadow:0 10px 40px rgba(0,0,0,.25) !important}
+
 </style>
 </head>
 <body>
@@ -1390,7 +1425,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.8 GESTOR · 10/10 20h50 · sync à prova de corrida (une todos os dados da nuvem)';;
+const VERSAO='v19.9 GESTOR · 10/10 21h50 · design premium';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
