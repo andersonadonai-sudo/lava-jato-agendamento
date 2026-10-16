@@ -166,8 +166,7 @@ header .t,header b{letter-spacing:.06em}
 .btn{border-radius:16px !important;font-weight:700 !important;transition:transform .12s ease,box-shadow .2s ease !important}
 .btn:active{transform:scale(.97)}
 .btn.p{background:linear-gradient(120deg,#7a5e12 0%,#d4af37 38%,#f7e59a 52%,#d4af37 66%,#8a6d1a 100%) !important;color:#1c1506 !important;box-shadow:0 6px 24px rgba(154,125,10,.45),0 2px 6px rgba(154,125,10,.3) !important;font-weight:800 !important}
-.btn.p::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);animation:shine 3.4s infinite}
-@keyframes shine{0%{left:-70%}55%{left:140%}100%{left:140%}}
+
 .btn.g{background:linear-gradient(135deg,#1d9040,#2e7d32) !important;box-shadow:0 6px 20px rgba(46,125,50,.35) !important}
 .btn.s{background:#fffdf8 !important;color:#8a6d1a !important;border:1.5px solid rgba(212,175,55,.55) !important}
 input,select,textarea{background:#fffdf8 !important;border:1.5px solid #e6d9b8 !important;border-radius:14px !important;padding:13px 14px !important;transition:border-color .2s,box-shadow .2s !important}
@@ -1425,7 +1424,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.9 GESTOR · 10/10 21h50 · design premium';;
+const VERSAO='v19.9.1 GESTOR · 10/10 21h55 · visual premium estático';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;

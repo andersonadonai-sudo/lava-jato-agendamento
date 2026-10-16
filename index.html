@@ -52,8 +52,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#9a7d0a}
 .btn{width:100%;padding:16px;border:none;border-radius:15px;font-size:16.5px;font-weight:900;cursor:pointer;font-family:inherit;transition:.15s;letter-spacing:.2px}
 .btn:active{transform:scale(.97)}
 .btn.p{background:linear-gradient(135deg,#8a6d1a 0%,#d4af37 45%,#f0d878 55%,#c9a227 100%);color:#1a1408;box-shadow:0 4px 16px rgba(154,125,10,.45);font-weight:900;position:relative;overflow:hidden}
-.btn.p::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 3.2s infinite}
-@keyframes shine{0%{left:-60%}55%{left:130%}100%{left:130%}}
+}
 .btn.g{background:linear-gradient(135deg,#1e8e3e,#2e7d32);color:#fff;box-shadow:0 4px 14px rgba(46,125,50,.38)}
 .btn.d{background:linear-gradient(135deg,#8e2c1f,#b3402e);color:#fff;box-shadow:0 4px 14px rgba(179,64,46,.35)}
 .btn.s{background:#fff;color:#9a7d0a;border:2px solid #d4af37;box-shadow:0 2px 8px rgba(38,32,26,.06)}
@@ -168,8 +167,7 @@ header .t,header b{letter-spacing:.06em}
 .btn{border-radius:16px !important;font-weight:700 !important;transition:transform .12s ease,box-shadow .2s ease !important}
 .btn:active{transform:scale(.97)}
 .btn.p{background:linear-gradient(120deg,#7a5e12 0%,#d4af37 38%,#f7e59a 52%,#d4af37 66%,#8a6d1a 100%) !important;color:#1c1506 !important;box-shadow:0 6px 24px rgba(154,125,10,.45),0 2px 6px rgba(154,125,10,.3) !important;font-weight:800 !important}
-.btn.p::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);animation:shine 3.4s infinite}
-@keyframes shine{0%{left:-70%}55%{left:140%}100%{left:140%}}
+
 .btn.g{background:linear-gradient(135deg,#1d9040,#2e7d32) !important;box-shadow:0 6px 20px rgba(46,125,50,.35) !important}
 .btn.s{background:#fffdf8 !important;color:#8a6d1a !important;border:1.5px solid rgba(212,175,55,.55) !important}
 input,select,textarea{background:#fffdf8 !important;border:1.5px solid #e6d9b8 !important;border-radius:14px !important;padding:13px 14px !important;transition:border-color .2s,box-shadow .2s !important}
@@ -738,7 +736,7 @@ setInterval(()=>{
 },3000);
 
 /* ============ VERSAO ============ */
-const VERSAO='v19.9 CLIENTE · 10/10 21h50 · design premium';;
+const VERSAO='v19.9.1 CLIENTE · 10/10 21h55 · visual premium estático';;
 function mostraVersao(){
   const a=document.getElementById('verBadge');if(a)a.textContent='✅ '+VERSAO;
   const b=document.getElementById('verBadgeHome');if(b)b.textContent='✅ '+VERSAO;
